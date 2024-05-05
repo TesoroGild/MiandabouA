@@ -1,0 +1,104 @@
+import { UserCredentials } from './../../interfaces/user-credentials.interface';
+import { LoginResponse } from '../../interfaces/login-response.interface';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { environment } from '../../../environments/dev.environment';
+import { BehaviorSubject } from 'rxjs';
+import { User } from '../../interfaces/user.interface';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class AuthService {
+
+  keyRole: string = 'role';
+  keyToken: string = 'token';
+
+  userToDisplay: User = { } as User;
+
+  private _userIsLoggedIn = new BehaviorSubject<boolean>(false);
+  public userIsLoggedIn = this._userIsLoggedIn.asObservable();
+  private _userIsAdmin = new BehaviorSubject<boolean>(false);
+  public userIsAdmin = this._userIsAdmin.asObservable();
+
+  userConnected: User = { } as User;
+
+  constructor(
+    private http : HttpClient
+  ) { 
+    const token = localStorage.getItem('token');
+    const admin = localStorage.getItem('role');
+    this._userIsLoggedIn.next(!!token);
+    this._userIsAdmin.next(!!admin);
+  }
+
+  isLoggedIn() {
+    return localStorage.getItem('token') != null;
+  }
+
+  async logIn(userCredentials: UserCredentials) {
+    //<LoginResponse>
+    const loginResponse = await this.http.post<any>(
+      `${environment.backendUrl}/usersConnect.php`, 
+      userCredentials
+    ).toPromise();
+    //const loginSucced = loginResponse.loginSucced !== null && loginResponse.loginSucced !== '';
+
+    if (loginResponse.loginSucced !== null 
+      && loginResponse.loginSucced !== '') {
+      this.setSession(loginResponse);
+      this.userToDisplay = loginResponse;
+    };
+    console.log(loginResponse);
+    console.log(this.userToDisplay);
+    //console.log(loginSucced);
+    return this.userToDisplay;
+  }
+
+  async logOut() {
+    const qparams = { 'id': 0 };
+    const logoutResponse = await this.http.post<any>(
+      `${environment.backendUrl}/userDeco.php`, 
+      { params: qparams }
+    ).toPromise();
+    const logoutSucced = logoutResponse.msg !== null && logoutResponse.msg !== '';
+
+    if (logoutSucced) {
+      this.unsetSession();
+      this.userToDisplay = {} as User;
+    }
+    console.log(logoutResponse);
+    console.log(logoutSucced);
+    return logoutSucced;
+  }
+
+  isAdmin() {
+    return localStorage.getItem(this.keyRole) === "admin";
+  }
+
+  setSession(authToken: any) {
+      localStorage.setItem(this.keyToken, authToken.token);
+      localStorage.setItem(this.keyRole, authToken.role);
+      this._userIsLoggedIn.next(true);
+
+      // envoyer le token JWT dans l'en-tête d'autorisation des requêtes HTTP
+      const httpOptions = {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + localStorage.getItem(this.keyToken)
+        })
+      };
+    }
+
+    unsetSession() {
+      localStorage.removeItem(this.keyToken);
+      localStorage.removeItem(this.keyRole);
+      localStorage.clear();
+      this._userIsLoggedIn.next(false);
+      this._userIsAdmin.next(false);
+    }
+
+  getToken(): string | null {
+      return localStorage.getItem(this.keyToken);
+    }
+}
