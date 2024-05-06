@@ -37,13 +37,15 @@ export class LoginComponent {
   async login() {
 
     if(this.isUserLoggedIn()) {
+      console.log("LOGIN: USER CONNECTED");
       this.snackBar.open("Un utilisateur est déjà connecté!!!", "", {
         duration: 3000,
         horizontalPosition: 'right',
         verticalPosition: 'bottom',
-        panelClass: 'popup2'
+        panelClass: 'warning'
       });
     } else {
+      console.log("LOGIN: USER NONCONNECTED");
       let emailValue = this.loginForm.get("email")?.value;
       let passwordValue = this.loginForm.get("password")?.value;
 
@@ -58,7 +60,7 @@ export class LoginComponent {
             duration: 3000,
             horizontalPosition: 'center',
             verticalPosition: 'bottom',
-            panelClass: 'popup2'
+            panelClass: 'success'
           });
           this.loginForm.reset();
           this.router.navigate(['']);
@@ -76,11 +78,21 @@ export class LoginComponent {
     return this.userIsLoggedIn; 
   }
 
-  emailInvalid(): boolean {
+  emailEmpty(): boolean {
     return this.showError("email", "required");
   }
 
-  passwordInvalid(): boolean {
+  emailFormat(): boolean {
+    return this.loginForm.get('email')!.hasError('pattern') 
+      && this.loginForm.get('email')!.touched;
+  }
+
+  emailLength(): boolean {
+    return this.loginForm.get('email')!.hasError('maxlength') 
+      && this.loginForm.get('email')!.touched;
+  }
+
+  passwordEmpty(): boolean {
     return this.showError("password", "required");
   }
 

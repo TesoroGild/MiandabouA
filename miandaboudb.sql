@@ -18,60 +18,60 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de données : `tp`
+-- Base de données : `miandaboudb`
 --
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `tp_orders`
+-- Structure de la table `orders`
 --
 
-DROP TABLE IF EXISTS `tp_orders`;
-CREATE TABLE IF NOT EXISTS `tp_orders` (
-  `oid` int NOT NULL AUTO_INCREMENT COMMENT 'identifiant de commande',
-  `customer` char(100) NOT NULL COMMENT 'Références à username de la table tp_users',
-  `total` int NOT NULL,
+DROP TABLE IF EXISTS `orders`;
+CREATE TABLE IF NOT EXISTS `orders` (
+  `id` char(10) NOT NULL COMMENT 'identifiant de commande',
+  `customer` char(100) NOT NULL COMMENT 'Références à username de la table users',
+  `total` char(10) NOT NULL,
   `timecreated` int DEFAULT NULL,
   `items` text NOT NULL COMMENT 'références aux produits commandés',
-  PRIMARY KEY (`oid`),
+  PRIMARY KEY (`id`),
   KEY `customer` (`customer`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Déchargement des données de la table `tp_orders`
+-- Déchargement des données de la table `orders`
 --
 
-INSERT INTO `tp_orders` (`oid`, `customer`, `total`, `timecreated`, `items`) VALUES
+INSERT INTO `orders` (`id`, `customer`, `total`, `timecreated`, `items`) VALUES
 (1, 'hermione', 60130, 1659548776, '1, 6, 11');
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `tp_products`
+-- Structure de la table `items`
 --
 
-DROP TABLE IF EXISTS `tp_products`;
-CREATE TABLE IF NOT EXISTS `tp_products` (
-  `pki` int NOT NULL AUTO_INCREMENT,
+DROP TABLE IF EXISTS `items`;
+CREATE TABLE IF NOT EXISTS `items` (
+  `id` char(10) NOT NULL,
   `name` char(100) NOT NULL,
-  `cat` enum('dev','infra','sc','fc') NOT NULL,
+  `category` enum('dev','infra','sc','fc') NOT NULL,
   `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
-  `photo` char(128) DEFAULT NULL COMMENT 'nom deonné par l''utilisateur au fichier photo du produit',
+  `picture` char(128) DEFAULT NULL COMMENT 'nom deonné par l''utilisateur au fichier photo du produit',
   `contenthash` char(40) DEFAULT NULL COMMENT 'sha1 de la photo du produit. C''est nom  sous lequel sera enregistré la photo',
   `video` char(255) DEFAULT NULL,
-  `prix` int NOT NULL,
-  `quantite` int NOT NULL DEFAULT '0',
+  `price` char(10) NOT NULL,
+  `quantity` int NOT NULL DEFAULT '0',
   `timecreated` int NOT NULL,
   `timemodified` int NOT NULL,
-  PRIMARY KEY (`pki`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Déchargement des données de la table `tp_products`
+-- Déchargement des données de la table `items`
 --
 
-INSERT INTO `tp_products` (`pki`, `name`, `cat`, `description`, `photo`, `contenthash`, `video`, `prix`, `quantite`, `timecreated`, `timemodified`) VALUES
+INSERT INTO `items` (`id`, `name`, `category`, `description`, `picture`, `contenthash`, `video`, `price`, `quantity`, `timecreated`, `timemodified`) VALUES
 (1, 'Logiciel', 'dev', 'Lorem ipsum dolor sit amet. Qui fugiat quia rem placeat reprehenderit et distinctio sunt ad corrupti nulla.', 'dev2.png', '05abc924f950ce495cdeacd487b0d1e9803adc4d', 'https://www.youtube.com/watch?v=JNljLQDYNSw&ab_channel=AnatoleBelliard', 30000, 1, 1659112331, 1659729603),
 (2, 'Site Web', 'dev', 'Lorem ipsum dolor sit amet. Qui fugiat quia rem placeat reprehenderit et distinctio sunt ad corrupti nulla.', 'dev3.png', '3610382170bdfe87d067a892d3e8d7bac2d1e1c7', 'https://www.youtube.com/watch?v=JNljLQDYNSw&ab_channel=AnatoleBelliard', 30000, 1, 1659112383, 1659112383),
 (3, 'Application Mobile', 'dev', 'Lorem ipsum dolor sit amet. Qui fugiat quia rem placeat reprehenderit et distinctio sunt ad corrupti nulla.', 'dev1.jpg', '1231c91d1a7517681f7e4ef159b5ad03e5079f29', 'https://www.youtube.com/watch?v=JNljLQDYNSw&ab_channel=AnatoleBelliard', 30000, 1, 1659112437, 1659112437),
@@ -101,24 +101,24 @@ INSERT INTO `tp_products` (`pki`, `name`, `cat`, `description`, `photo`, `conten
 -- --------------------------------------------------------
 
 --
--- Structure de la table `tp_users`
+-- Structure de la table `users`
 --
 
-DROP TABLE IF EXISTS `tp_users`;
-CREATE TABLE IF NOT EXISTS `tp_users` (
-  `id` int NOT NULL AUTO_INCREMENT,
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` char(10) NOT NULL,
   `username` char(100) NOT NULL COMMENT 'Nom d''utilisateur',
   `password` char(255) NOT NULL,
   `fistname` char(100) NOT NULL,
   `lastname` char(100) NOT NULL,
   `role` enum('admin','user') NOT NULL,
-  `photo` char(128) DEFAULT NULL COMMENT 'Nom que l''utilisateur avait donné au fichier photo',
+  `picture` char(128) DEFAULT NULL COMMENT 'Nom que l''utilisateur avait donné au fichier photo',
   `contenthash` char(40) DEFAULT NULL COMMENT 'sha1 du contenu du fichier photo. C''est le nom que portera le fichier enregistré sur le serveur.',
   `email` char(100) NOT NULL,
   `status` enum('customer','employee') NOT NULL COMMENT 'Status de la personne.',
-  `dob` int DEFAULT NULL COMMENT 'Date de naissance',
+  `dateOfBith` int DEFAULT NULL COMMENT 'Date de naissance',
   `tel` char(20) DEFAULT NULL COMMENT 'Téléphone',
-  `dept` enum('dev','infra','sc','fc') DEFAULT NULL COMMENT 'Département',
+  `department` enum('dev','infra','sc','fc') DEFAULT NULL COMMENT 'Département',
   `timecreated` int DEFAULT NULL COMMENT 'timestamp de la date création du compte',
   `timemodified` int DEFAULT NULL COMMENT 'timestamp de la date modification du compte',
   `lastlogin` int DEFAULT NULL COMMENT 'timestamp de la date de dernière connexion de l''utilisateur',
@@ -127,10 +127,10 @@ CREATE TABLE IF NOT EXISTS `tp_users` (
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Déchargement des données de la table `tp_users`
+-- Déchargement des données de la table `users`
 --
 
-INSERT INTO `tp_users` (`id`, `username`, `password`, `fistname`, `lastname`, `role`, `photo`, `contenthash`, `email`, `status`, `dob`, `tel`, `dept`, `timecreated`, `timemodified`, `lastlogin`) VALUES
+INSERT INTO `users` (`id`, `username`, `password`, `fistname`, `lastname`, `role`, `picture`, `contenthash`, `email`, `status`, `dateOfBith`, `tel`, `department`, `timecreated`, `timemodified`, `lastlogin`) VALUES
 (1, 'admin', 'c620ca92831a71e13a03d7d293efaa33', 'Administrator', 'System', 'admin', NULL, NULL, 'admin@inf3190.test.web', 'employee', NULL, NULL, NULL, NULL, NULL, NULL),
 (2, 'client1', '2f4fa55339d7cb2bebb325742f3d54c9', 'Client', 'Usager', 'user', NULL, NULL, 'client1@inf3190.test.web', 'customer', NULL, NULL, NULL, NULL, NULL, NULL),
 (5, 'vito', '$argon2i$v=19$m=65536,t=4,p=1$UjFZcktNVzh4Y1JLOUIxZg$GhUMG+XCVE8VsgkdIf3XrQvw5rVmqgOON8LD+Sww+e0', 'Robert', 'De Niro', 'user', 'vito1.png', '19171d4754ec41cd996b8628afc0dd4a57fe4cd7', 'vito@corleone.tg', 'employee', 0, '', 'fc', 1659139583, 1659139583, 1659884869),
@@ -145,10 +145,10 @@ INSERT INTO `tp_users` (`id`, `username`, `password`, `fistname`, `lastname`, `r
 --
 
 --
--- Contraintes pour la table `tp_orders`
+-- Contraintes pour la table `orders`
 --
-ALTER TABLE `tp_orders`
-  ADD CONSTRAINT `tp_orders_ibfk_1` FOREIGN KEY (`customer`) REFERENCES `tp_users` (`username`);
+ALTER TABLE `orders`
+  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`customer`) REFERENCES `users` (`username`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

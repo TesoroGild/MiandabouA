@@ -29,7 +29,7 @@ export class LogoutComponent {
         duration: 3000,
         horizontalPosition: 'center',
         verticalPosition: 'bottom',
-        panelClass: 'popup1'
+        panelClass: 'success'
       });
       this.router.navigateByUrl("/home");
     } else {
@@ -37,7 +37,7 @@ export class LogoutComponent {
         duration: 3000,
         horizontalPosition: 'center',
         verticalPosition: 'bottom',
-        panelClass: 'popup1'
+        panelClass: 'warning'
       }); 
     }
   }

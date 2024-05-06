@@ -10,10 +10,26 @@ export class UserService {
 
   constructor() { }
 
-  getUsers() {
+  getUsers(): any {
 
   }
   
+  createUsers(user: User): any {
+    
+  }
+
+  updateUsers(user: User): any {
+    
+  }
+
+  enableUsers(id: string) {
+    
+  }
+
+  disableUsers(id: string) {
+    
+  }
+
   clearData() {
     this.users = [];
   }

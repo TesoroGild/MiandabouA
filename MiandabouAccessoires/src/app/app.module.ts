@@ -16,6 +16,8 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { FootbarComponent } from './components/footbar/footbar.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ReactiveFormsModule } from '@angular/forms';
+import { PwdrecoveryComponent } from './components/pwdrecovery/pwdrecovery.component';
+import { RegisterComponent } from './components/register/register.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +30,9 @@ import { ReactiveFormsModule } from '@angular/forms';
     LoginComponent,
     LogoutComponent,
     NavbarComponent,
-    UserComponent
+    UserComponent,
+    PwdrecoveryComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,
