@@ -5,6 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/connection/auth.service';
 import { User } from '../../interfaces/user.interface';
+import { FileReaderService } from '../../services/file-reader/file-reader.service';
 
 @Component({
   selector: 'app-register',
@@ -28,19 +29,21 @@ export class RegisterComponent {
     role: [null, [Validators.required]],
     fname: [null, [Validators.required]],
     dateOfBith: [null, [Validators.required]],
-    department: [null, [Validators.required]],
-    picture: [null, [Validators.required]],
-    tel: [null, [Validators.required]],
-    statut: [null, [Validators.required]],
+    department: [null],
+    picture: [null],
+    tel: [null]
   });
 
   userIsLoggedIn: boolean = false;
+  file: File | null = null;
+  pic: any = null;
 
   constructor(
     private snackBar: MatSnackBar,
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private userService: UserService,
+    private fileReaderService: FileReaderService,
     private router: Router
   ) { }
 
@@ -64,9 +67,8 @@ export class RegisterComponent {
       let fnameValue =  this.registerForm.get("fname")?.value;
       let dateOfBithValue =  this.registerForm.get("dateOfBith")?.value;
       let departmentValue =  this.registerForm.get("department")?.value;
-      let pictureValue =  this.registerForm.get("picture")?.value;
+      let pictureValue =  this.pic;
       let telValue =  this.registerForm.get("tel")?.value
-      let statutValue =  this.registerForm.get("statut")?.value;
 
       if (
         emailValue != null &&
@@ -75,9 +77,9 @@ export class RegisterComponent {
         lnameValue  != null &&
         roleValue != null &&
         fnameValue != null &&
-        dateOfBithValue != null &&
-        statutValue != null
+        dateOfBithValue != null
       ) {
+        //revoir deptartement picture tel
         let userToCreate: User = {
           username: usernameValue,
           password: passwordValue,
@@ -85,11 +87,11 @@ export class RegisterComponent {
           role: roleValue,
           fname: fnameValue,
           dateOfBith: dateOfBithValue,
-          department: departmentValue,
+          department: (departmentValue) ? departmentValue : undefined,
           picture: pictureValue,
-          tel: telValue,
+          tel: (telValue) ? telValue : undefined,
           email: emailValue,
-          statut: statutValue
+          statut: "enable",
         };
         const userCreated = await this.userService.createUsers(userToCreate);
         if (userCreated.username != null && userCreated.username != '') {
@@ -104,6 +106,20 @@ export class RegisterComponent {
         }
       } else this.registerForm.markAllAsTouched();
     }
+  }
+
+  // showPicture() {
+
+  // }
+
+  fileChanged(event: any) {
+    this.file = event.target.files[0];
+    this.setPicture();
+  }
+
+  async setPicture( ) {
+    if (this.file != null)
+      this.pic = await this.fileReaderService.readFile(this.file);
   }
 
   isUserLoggedIn() {

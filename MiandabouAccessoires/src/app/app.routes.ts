@@ -11,9 +11,13 @@ import { UserComponent } from './components/user/user.component';
 import { AuthGuard } from './services/connection/auth.guard';
 import { AdminGuard } from './services/admin/admin.guard';
 import { ContactComponent } from './components/contact/contact.component';
+import { BillComponent } from './components/bill/bill.component';
+import { PwdrecoveryComponent } from './components/pwdrecovery/pwdrecovery.component';
+import { RegisterComponent } from './components/register/register.component';
 
 export const routes: Routes = [
     { path: 'about', component: AboutComponent },
+    { path: 'bill', component: BillComponent },
     { path: 'chart', component: ChartComponent },
     { path: 'contact', component: ContactComponent },
       //{ path: 'dev/:id/modifier', component: DevComponent },
@@ -23,6 +27,8 @@ export const routes: Routes = [
     { path: 'item', component: ItemComponent },
     { path: 'login', component: LoginComponent },
     { path: 'logout', component: LogoutComponent, canActivate: [AuthGuard] }, 
+    { path: 'pwdrecovery', component: PwdrecoveryComponent },
+    { path: 'register', component: RegisterComponent },
     { path: 'user', component: UserComponent, canActivate: [AdminGuard] },
       //{ path: 'admin', component: AdminComponent, canActivate: [AuthGuard] },
       //{ path: 'admin/:id/modifier', component: AdminComponent, canActivate: [AuthGuard] },

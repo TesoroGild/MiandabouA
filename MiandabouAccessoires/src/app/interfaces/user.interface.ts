@@ -11,4 +11,5 @@ export interface User {
     tel?: string;
     email: string;
     statut: string;
+    //deliveryAddress: string;
 }
