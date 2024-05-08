@@ -55,7 +55,7 @@ export class LoginComponent {
           password: passwordValue,
         };
         const userToDisplay = await this.authService.logIn(userCredentials);
-        if (userToDisplay.fname != null && userToDisplay.fname != '') {
+        if (userToDisplay.firstname != null && userToDisplay.firstname != '') {
           this.snackBar.open("Connexion reussie!", "", {
             duration: 3000,
             horizontalPosition: 'center',

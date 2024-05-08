@@ -18,12 +18,16 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ReactiveFormsModule } from '@angular/forms';
 import { PwdrecoveryComponent } from './components/pwdrecovery/pwdrecovery.component';
 import { RegisterComponent } from './components/register/register.component';
+import { BillComponent } from './components/bill/bill.component';
+import { ContactComponent } from './components/contact/contact.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     AboutComponent,
+    BillComponent,
     ChartComponent,
+    ContactComponent,
     FootbarComponent,
     HomeComponent,
     ItemComponent,

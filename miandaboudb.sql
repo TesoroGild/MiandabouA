@@ -116,7 +116,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `contenthash` char(40) DEFAULT NULL COMMENT 'sha1 du contenu du fichier photo. C''est le nom que portera le fichier enregistré sur le serveur.',
   `email` char(100) NOT NULL,
   `status` enum('customer','employee') NOT NULL COMMENT 'Status de la personne.',
-  `dateOfBith` int DEFAULT NULL COMMENT 'Date de naissance',
+  `dateOfBirth` int DEFAULT NULL COMMENT 'Date de naissance',
   `tel` char(20) DEFAULT NULL COMMENT 'Téléphone',
   `department` enum('dev','infra','sc','fc') DEFAULT NULL COMMENT 'Département',
   `timecreated` int DEFAULT NULL COMMENT 'timestamp de la date création du compte',
@@ -130,7 +130,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 -- Déchargement des données de la table `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `password`, `fistname`, `lastname`, `role`, `picture`, `contenthash`, `email`, `status`, `dateOfBith`, `tel`, `department`, `timecreated`, `timemodified`, `lastlogin`) VALUES
+INSERT INTO `users` (`id`, `username`, `password`, `fistname`, `lastname`, `role`, `picture`, `contenthash`, `email`, `status`, `dateOfBirth`, `tel`, `department`, `timecreated`, `timemodified`, `lastlogin`) VALUES
 (1, 'admin', 'c620ca92831a71e13a03d7d293efaa33', 'Administrator', 'System', 'admin', NULL, NULL, 'admin@inf3190.test.web', 'employee', NULL, NULL, NULL, NULL, NULL, NULL),
 (2, 'client1', '2f4fa55339d7cb2bebb325742f3d54c9', 'Client', 'Usager', 'user', NULL, NULL, 'client1@inf3190.test.web', 'customer', NULL, NULL, NULL, NULL, NULL, NULL),
 (5, 'vito', '$argon2i$v=19$m=65536,t=4,p=1$UjFZcktNVzh4Y1JLOUIxZg$GhUMG+XCVE8VsgkdIf3XrQvw5rVmqgOON8LD+Sww+e0', 'Robert', 'De Niro', 'user', 'vito1.png', '19171d4754ec41cd996b8628afc0dd4a57fe4cd7', 'vito@corleone.tg', 'employee', 0, '', 'fc', 1659139583, 1659139583, 1659884869),
