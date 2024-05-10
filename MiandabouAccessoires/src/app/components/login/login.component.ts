@@ -54,17 +54,20 @@ export class LoginComponent {
           email: emailValue,
           password: passwordValue,
         };
-        const userToDisplay = await this.authService.logIn(userCredentials);
-        if (userToDisplay.firstname != null && userToDisplay.firstname != '') {
-          this.snackBar.open("Connexion reussie!", "", {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'bottom',
-            panelClass: 'success'
-          });
-          this.loginForm.reset();
-          this.router.navigate(['']);
-        }
+        this.authService.logIn(userCredentials).subscribe((userConnected: any) => {
+          this.authService.setUserToDisplay(userConnected.user);
+          if (userConnected.user.email != null && userConnected.user.email != '') {
+            this.snackBar.open("Connexion reussie!", "", {
+              duration: 3000,
+              horizontalPosition: 'center',
+              verticalPosition: 'bottom',
+              panelClass: 'success'
+            });
+            this.loginForm.reset();
+            this.router.navigate(['']);
+            console.log("LOGIN: USER CONNECTED");
+          }
+        });
       } else this.loginForm.markAllAsTouched();
     }
   }

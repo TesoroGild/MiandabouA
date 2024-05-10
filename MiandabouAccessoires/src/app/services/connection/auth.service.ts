@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/dev.environment';
 import { BehaviorSubject } from 'rxjs';
-import { User } from '../../interfaces/user.interface';
+import { User, UserToDisplay } from '../../interfaces/user.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -14,14 +14,16 @@ export class AuthService {
   keyRole: string = 'role';
   keyToken: string = 'token';
 
-  userToDisplay: User = { } as User;
+  //userToDisplay: UserToDisplay = { } as UserToDisplay;
 
   private _userIsLoggedIn = new BehaviorSubject<boolean>(false);
   public userIsLoggedIn = this._userIsLoggedIn.asObservable();
   private _userIsAdmin = new BehaviorSubject<boolean>(false);
   public userIsAdmin = this._userIsAdmin.asObservable();
+  private _userToDisplay = new BehaviorSubject<UserToDisplay>({} as UserToDisplay);
+  public userToDisplay = this._userToDisplay.asObservable();
 
-  userConnected: User = { } as User;
+  userConnected: UserToDisplay = { } as UserToDisplay;
 
   constructor(
     private http : HttpClient
@@ -36,23 +38,23 @@ export class AuthService {
     return localStorage.getItem('token') != null;
   }
 
-  async logIn(userCredentials: UserCredentials) {
+  logIn(userCredentials: UserCredentials) {
     //<LoginResponse>
-    const loginResponse = await this.http.post<any>(
+    return this.http.post<any>(
       `${environment.backendUrl}/usersConnect.php`, 
       userCredentials
-    ).toPromise();
+    );
     //const loginSucced = loginResponse.loginSucced !== null && loginResponse.loginSucced !== '';
 
-    if (loginResponse.loginSucced !== null 
-      && loginResponse.loginSucced !== '') {
-      this.setSession(loginResponse);
-      this.userToDisplay = loginResponse;
-    };
-    console.log(loginResponse);
-    console.log(this.userToDisplay);
-    //console.log(loginSucced);
-    return this.userToDisplay;
+    // if (loginResponse.loginSucced !== null 
+    //   && loginResponse.loginSucced !== '') {
+    //   this.setSession(loginResponse);
+    //   this.userToDisplay = loginResponse;
+    // };
+    // console.log(loginResponse);
+    // console.log(this.userToDisplay);
+    // console.log(loginSucced);
+    // return this.userToDisplay;
   }
 
   async logOut() {
@@ -65,7 +67,7 @@ export class AuthService {
 
     if (logoutSucced) {
       this.unsetSession();
-      this.userToDisplay = {} as User;
+      //this.userToDisplay = {} as UserToDisplay;
     }
     console.log(logoutResponse);
     console.log(logoutSucced);
@@ -99,6 +101,13 @@ export class AuthService {
     }
 
   getToken(): string | null {
-      return localStorage.getItem(this.keyToken);
-    }
+    return localStorage.getItem(this.keyToken);
+  }
+
+  setUserToDisplay(user: UserToDisplay) {
+    //this.userToDisplay = user;
+    this._userToDisplay.next(user);
+    //nav
+  }
+
 }

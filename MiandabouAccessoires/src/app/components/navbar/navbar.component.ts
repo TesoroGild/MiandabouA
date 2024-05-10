@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../services/connection/auth.service';
 import { HttpClient } from '@angular/common/http';
-import { User } from '../../interfaces/user.interface';
+import { UserToDisplay } from '../../interfaces/user.interface';
 import { UserService } from '../../services/user/user.service';
 import { ChartService } from '../../services/chart/chart.service';
 
@@ -13,7 +13,7 @@ import { ChartService } from '../../services/chart/chart.service';
 })
 export class NavbarComponent {
 
-  userToDisplay: User = {} as User;
+  userToDisplay: UserToDisplay = {} as UserToDisplay;
 
   constructor(
     //private snackBar: MatSnackBar, 
@@ -23,6 +23,12 @@ export class NavbarComponent {
     private userService: UserService,
     private chartService: ChartService
   ) { }
+
+  ngOnInit(): void {
+    this.authService.userToDisplay.subscribe((data) => {
+      this.userToDisplay = data;
+    });
+  }
 
 
   isAdmin() {
@@ -47,5 +53,9 @@ export class NavbarComponent {
     if (this.isLoggedIn())
       return this.userToDisplay.picture;
     else return 'user_icon.png';
+  }
+
+  setUserToDisplay(user: UserToDisplay) {
+    this.userToDisplay = user;
   }
 }

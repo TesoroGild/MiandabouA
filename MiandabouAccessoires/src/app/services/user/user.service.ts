@@ -19,9 +19,10 @@ export class UserService {
 
   }
   
-  createUsers(
-    user: User,
-    //token: string
+  createUser(
+    user: FormData
+    //user: User,
+    //picture: FormData
   ): any {
     // const headers = new HttpHeaders().set(
     //   this.AUTHORIZATION,
@@ -33,15 +34,15 @@ export class UserService {
     );
   }
 
-  updateUsers(user: User): any {
+  updateUser(user: User): any {
     
   }
 
-  enableUsers(id: string) {
+  enableUser(id: string) {
     
   }
 
-  disableUsers(id: string) {
+  disableUser(id: string) {
     
   }
 

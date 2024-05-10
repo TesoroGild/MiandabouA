@@ -1,6 +1,6 @@
 import { UserService } from './../../services/user/user.service';
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/connection/auth.service';
@@ -16,7 +16,7 @@ export class RegisterComponent {
 
   phonePattern = /^\(\d{3}\) \d{3}-\d{4}$/;
 
-  registerForm = this.formBuilder.group({
+  registerForm: FormGroup = this.formBuilder.group({
     email: [
       null,
       [
@@ -66,12 +66,19 @@ export class RegisterComponent {
       [
         Validators.pattern(this.phonePattern)
       ]
-    ]
+    ],
+    status: [
+      false, 
+      [
+        Validators.required
+      ]
+    ],
   });
 
   userIsLoggedIn: boolean = false;
   file: File | null = null;
-  pic: any = null;
+  //picturetmp: any;
+  pictureTmp: FormControl= new FormControl('');
   phone: string = '';
   isImgExtension: boolean = true;
   cpassword: any = null;
@@ -88,7 +95,7 @@ export class RegisterComponent {
   async register() {
 
     if(this.isUserLoggedIn()) {
-      console.log("LOGIN: USER CONNECTED");
+      console.log("REGISTER: USER CONNECTED");
       this.snackBar.open("Vous devez d'abord vous déconnecter!", "", {
         duration: 3000,
         horizontalPosition: 'right',
@@ -96,66 +103,80 @@ export class RegisterComponent {
         panelClass: 'warning'
       });
     } else {
-      console.log("LOGIN: USER NONCONNECTED");
-      let emailValue = this.registerForm.get("email")?.value;
-      let passwordValue = this.registerForm.get("password")?.value;
-      let usernameValue =  this.registerForm.get("username")?.value;
-      let lastnameValue =  this.registerForm.get("lastname")?.value;
-      let roleValue =  this.registerForm.get("role")?.value;
-      let firstnameValue =  this.registerForm.get("firstname")?.value;
-      let dateOfBirthValue =  this.registerForm.get("dateOfBirth")?.value;
-      let departmentValue =  this.registerForm.get("department")?.value;
-      let pictureValue =  this.pic;
-      let telValue =  this.registerForm.get("tel")?.value;
+      console.log("REGISTER: USER NONCONNECTED");
+      let emailValue = this.registerForm.get("email")!.value;
+      let passwordValue = this.registerForm.get("password")!.value;
+      // let usernameValue =  this.registerForm.get("username")?.value;
+      let lastnameValue =  this.registerForm.get("lastname")!.value;
+      let roleValue =  this.registerForm.get("role")!.value;
+      let firstnameValue =  this.registerForm.get("firstname")!.value;
+      // let dateOfBirthValue =  (this.registerForm.get("dateOfBirth")?.value) ? this.registerForm.get("dateOfBirth")?.value : "";
+      // let departmentValue =  this.registerForm.get("department")?.value;
+      // let pictureValue =  this.pictureTmp;
+      // let telValue =  this.registerForm.get("tel")?.value;
+      let statusValue =  this.registerForm.get("status")!.value;
 
       if (
         emailValue != null &&
         passwordValue != null &&
         lastnameValue  != null &&
         roleValue != null &&
-        firstnameValue != null
+        firstnameValue != null &&
+        statusValue != null
       ) {
-        let userToCreate: User = {
-          username: (usernameValue) ? usernameValue : undefined,
-          password: passwordValue,
-          lastname: lastnameValue,
-          role: roleValue,
-          firstname: firstnameValue,
-          dateOfBirth: (dateOfBirthValue) ? dateOfBirthValue : undefined,
-          department: (departmentValue) ? departmentValue : undefined,
-          picture: pictureValue,
-          tel: (telValue) ? telValue : undefined,
-          email: emailValue,
-          statut: "enable",
-        };
+        const userToCreate = new FormData();
+        for (let elmKey in this.registerForm.controls) {
+          let elmValue = this.registerForm.value[elmKey];
+          userToCreate.append(elmKey, elmValue);
+        }
+
+        if (this.pictureTmp.value)
+          userToCreate.append('picture', this.pictureTmp.value);
+
+        // let userToCreate: User = {
+        //   username: (usernameValue) ? usernameValue : undefined,
+        //   password: passwordValue,
+        //   lastname: lastnameValue,
+        //   role: roleValue,
+        //   firstname: firstnameValue,
+        //   dateOfBirth: (dateOfBirthValue) ? dateOfBirthValue : undefined,
+        //   department: (departmentValue) ? departmentValue : undefined,
+        //   picture: pictureValue,
+        //   tel: (telValue) ? telValue : undefined,
+        //   email: emailValue,
+        //   status: "enabled",
+        // };
         let token: string = "";
+
         if (roleValue == "admin" || roleValue == "employee")
           token = this.authService.getToken() as string;
-        const userCreated = await this.userService.createUsers(userToCreate);//, token
-        console.log(userCreated);
-        if (userCreated.username != null && userCreated.username != '') {
-          this.snackBar.open("Connexion reussie!", "", {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'bottom',
-            panelClass: 'success'
-          });
-          this.registerForm.reset();
-          this.router.navigate(['']);
-        }
+        this.userService.createUser(userToCreate).subscribe((userCreated: any) => {
+          this.authService.setUserToDisplay(userCreated.user);
+          if (userCreated.user.email != null && userCreated.user.email != '') {
+            this.snackBar.open("Connexion reussie!", "", {
+              duration: 3000,
+              horizontalPosition: 'center',
+              verticalPosition: 'bottom',
+              panelClass: 'success'
+            });
+            this.registerForm.reset();
+            this.router.navigate(['']);
+            console.log("REGISTER: USER CREATE");
+          }
+        });//, token
       } else this.registerForm.markAllAsTouched();
     }
   }
 
-  fileChanged(event: any) {
-    this.file = event.target.files[0];
-    this.setPicture();
-  }
+  // fileChanged(event: any) {
+  //   this.file = event.target.files[0];
+  //   this.setPicture();
+  // }
 
-  async setPicture( ) {
-    if (this.file != null)
-      this.pic = await this.fileReaderService.readFile(this.file);
-  }
+  // async setPicture( ) {
+  //   if (this.file != null)
+  //     this.pic = await this.fileReaderService.readFile(this.file);
+  // }
 
   isUserLoggedIn() {
     this.authService.userIsLoggedIn.subscribe({
@@ -245,15 +266,14 @@ export class RegisterComponent {
 
   //picture
   loadPicture(event: any): void {
-    const input = event.target as HTMLInputElement;
-    const file = input.files?.[0];
-    if (!file) return;
-    this.isImgExtension = this.pictureExtension(file.name);
+    this.pictureTmp.setValue(event.target.files![0]);
+    if (!this.pictureTmp) return;
+    this.isImgExtension = this.pictureExtension(this.pictureTmp.value.name);
     if (!this.isImgExtension) return;
 
     const output = document.getElementById('preview_img') as HTMLImageElement;
 
-    output.src = URL.createObjectURL(file);
+    output.src = URL.createObjectURL(this.pictureTmp.value);
     output.onload = () => {
         URL.revokeObjectURL(output.src); // free memory
     };
