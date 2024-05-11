@@ -1,11 +1,9 @@
 import { UserService } from './../../services/user/user.service';
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/connection/auth.service';
-import { User } from '../../interfaces/user.interface';
-import { FileReaderService } from '../../services/file-reader/file-reader.service';
 
 @Component({
   selector: 'app-register',
@@ -77,7 +75,6 @@ export class RegisterComponent {
 
   userIsLoggedIn: boolean = false;
   file: File | null = null;
-  //picturetmp: any;
   pictureTmp: FormControl= new FormControl('');
   phone: string = '';
   isImgExtension: boolean = true;
@@ -88,7 +85,6 @@ export class RegisterComponent {
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private userService: UserService,
-    private fileReaderService: FileReaderService,
     private router: Router
   ) { }
 
@@ -106,14 +102,9 @@ export class RegisterComponent {
       console.log("REGISTER: USER NONCONNECTED");
       let emailValue = this.registerForm.get("email")!.value;
       let passwordValue = this.registerForm.get("password")!.value;
-      // let usernameValue =  this.registerForm.get("username")?.value;
       let lastnameValue =  this.registerForm.get("lastname")!.value;
       let roleValue =  this.registerForm.get("role")!.value;
       let firstnameValue =  this.registerForm.get("firstname")!.value;
-      // let dateOfBirthValue =  (this.registerForm.get("dateOfBirth")?.value) ? this.registerForm.get("dateOfBirth")?.value : "";
-      // let departmentValue =  this.registerForm.get("department")?.value;
-      // let pictureValue =  this.pictureTmp;
-      // let telValue =  this.registerForm.get("tel")?.value;
       let statusValue =  this.registerForm.get("status")!.value;
 
       if (
@@ -133,19 +124,6 @@ export class RegisterComponent {
         if (this.pictureTmp.value)
           userToCreate.append('picture', this.pictureTmp.value);
 
-        // let userToCreate: User = {
-        //   username: (usernameValue) ? usernameValue : undefined,
-        //   password: passwordValue,
-        //   lastname: lastnameValue,
-        //   role: roleValue,
-        //   firstname: firstnameValue,
-        //   dateOfBirth: (dateOfBirthValue) ? dateOfBirthValue : undefined,
-        //   department: (departmentValue) ? departmentValue : undefined,
-        //   picture: pictureValue,
-        //   tel: (telValue) ? telValue : undefined,
-        //   email: emailValue,
-        //   status: "enabled",
-        // };
         let token: string = "";
 
         if (roleValue == "admin" || roleValue == "employee")
@@ -167,16 +145,6 @@ export class RegisterComponent {
       } else this.registerForm.markAllAsTouched();
     }
   }
-
-  // fileChanged(event: any) {
-  //   this.file = event.target.files[0];
-  //   this.setPicture();
-  // }
-
-  // async setPicture( ) {
-  //   if (this.file != null)
-  //     this.pic = await this.fileReaderService.readFile(this.file);
-  // }
 
   isUserLoggedIn() {
     this.authService.userIsLoggedIn.subscribe({

@@ -16,12 +16,9 @@ export class AuthService {
 
   //userToDisplay: UserToDisplay = { } as UserToDisplay;
 
-  private _userIsLoggedIn = new BehaviorSubject<boolean>(false);
-  public userIsLoggedIn = this._userIsLoggedIn.asObservable();
-  private _userIsAdmin = new BehaviorSubject<boolean>(false);
-  public userIsAdmin = this._userIsAdmin.asObservable();
-  private _userToDisplay = new BehaviorSubject<UserToDisplay>({} as UserToDisplay);
-  public userToDisplay = this._userToDisplay.asObservable();
+  userIsLoggedIn = new BehaviorSubject<boolean>(false);
+  userIsAdmin = new BehaviorSubject<boolean>(false);
+  userToDisplay = new BehaviorSubject<UserToDisplay>({} as UserToDisplay);
 
   userConnected: UserToDisplay = { } as UserToDisplay;
 
@@ -30,8 +27,8 @@ export class AuthService {
   ) { 
     const token = localStorage.getItem('token');
     const admin = localStorage.getItem('role');
-    this._userIsLoggedIn.next(!!token);
-    this._userIsAdmin.next(!!admin);
+    this.userIsLoggedIn.next(!!token);
+    this.userIsAdmin.next(!!admin);
   }
 
   isLoggedIn() {
@@ -81,7 +78,7 @@ export class AuthService {
   setSession(authToken: any) {
       localStorage.setItem(this.keyToken, authToken.token);
       localStorage.setItem(this.keyRole, authToken.role);
-      this._userIsLoggedIn.next(true);
+      this.userIsLoggedIn.next(true);
 
       // envoyer le token JWT dans l'en-tête d'autorisation des requêtes HTTP
       const httpOptions = {
@@ -96,8 +93,8 @@ export class AuthService {
       localStorage.removeItem(this.keyToken);
       localStorage.removeItem(this.keyRole);
       localStorage.clear();
-      this._userIsLoggedIn.next(false);
-      this._userIsAdmin.next(false);
+      this.userIsLoggedIn.next(false);
+      this.userIsAdmin.next(false);
     }
 
   getToken(): string | null {
@@ -106,8 +103,13 @@ export class AuthService {
 
   setUserToDisplay(user: UserToDisplay) {
     //this.userToDisplay = user;
-    this._userToDisplay.next(user);
-    //nav
+    this.userToDisplay.next(user);
+    return this.userToDisplay.asObservable();
+    //console.log(this.userToDisplay);
+  }
+
+  getUserToDisplay() {
+    return this.userToDisplay.asObservable();
   }
 
 }

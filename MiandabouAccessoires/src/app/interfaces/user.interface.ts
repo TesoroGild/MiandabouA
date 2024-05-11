@@ -16,14 +16,16 @@ export interface User {
 
 export interface UserToDisplay {
     id?: string;
-    username?: string;
+    email: string; 
     lastname: string;
-    role: string;
     firstname: string;
-    department?: string;
-    picture?: string;
+    username?: string;
+    dateOfBirth?: string;
     tel?: string;
-    email: string;
+    role: string;
+    department?: string;
+    contenthash?: string;
     status: string;
+    lastLogin: string;
     //deliveryAddress: string;
 }

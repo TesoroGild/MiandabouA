@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { UserToDisplay } from '../../interfaces/user.interface';
 import { UserService } from '../../services/user/user.service';
 import { ChartService } from '../../services/chart/chart.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
@@ -13,20 +14,25 @@ import { ChartService } from '../../services/chart/chart.service';
 })
 export class NavbarComponent {
 
+  userToDisplay$ = this.authService.getUserToDisplay();
   userToDisplay: UserToDisplay = {} as UserToDisplay;
+  userSubscription: Subscription;
 
   constructor(
-    //private snackBar: MatSnackBar, 
-    private http : HttpClient, 
     private router: Router, 
     public authService: AuthService,
     private userService: UserService,
     private chartService: ChartService
-  ) { }
+  ) { 
+    this.userSubscription = this.userToDisplay$.subscribe((u) => {
+      this.userToDisplay = u;
+    })
+  }
 
   ngOnInit(): void {
     this.authService.userToDisplay.subscribe((data) => {
       this.userToDisplay = data;
+      console.log(this.userToDisplay);
     });
   }
 
@@ -51,11 +57,7 @@ export class NavbarComponent {
 
   picture() {
     if (this.isLoggedIn())
-      return this.userToDisplay.picture;
+      return this.userToDisplay.contenthash;
     else return 'user_icon.png';
-  }
-
-  setUserToDisplay(user: UserToDisplay) {
-    this.userToDisplay = user;
   }
 }
