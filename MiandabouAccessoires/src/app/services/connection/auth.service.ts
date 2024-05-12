@@ -1,10 +1,9 @@
 import { UserCredentials } from './../../interfaces/user-credentials.interface';
-import { LoginResponse } from '../../interfaces/login-response.interface';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/dev.environment';
 import { BehaviorSubject } from 'rxjs';
-import { User, UserToDisplay } from '../../interfaces/user.interface';
+import { UserToDisplay } from '../../interfaces/user.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -38,7 +37,7 @@ export class AuthService {
   logIn(userCredentials: UserCredentials) {
     //<LoginResponse>
     return this.http.post<any>(
-      `${environment.backendUrl}/usersConnect.php`, 
+      `${environment.backendUrl}/php/usersConnect.php`, 
       userCredentials
     );
     //const loginSucced = loginResponse.loginSucced !== null && loginResponse.loginSucced !== '';
@@ -57,7 +56,7 @@ export class AuthService {
   async logOut() {
     const qparams = { 'id': 0 };
     const logoutResponse = await this.http.post<any>(
-      `${environment.backendUrl}/userDeco.php`, 
+      `${environment.backendUrl}/php/userDeco.php`, 
       { params: qparams }
     ).toPromise();
     const logoutSucced = logoutResponse.msg !== null && logoutResponse.msg !== '';
@@ -104,6 +103,7 @@ export class AuthService {
   setUserToDisplay(user: UserToDisplay) {
     //this.userToDisplay = user;
     this.userToDisplay.next(user);
+    this.setSession(user.token);
     return this.userToDisplay.asObservable();
     //console.log(this.userToDisplay);
   }

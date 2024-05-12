@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthService } from '../../services/connection/auth.service';
-import { HttpClient } from '@angular/common/http';
 import { UserToDisplay } from '../../interfaces/user.interface';
 import { UserService } from '../../services/user/user.service';
 import { ChartService } from '../../services/chart/chart.service';
+import { environment } from '../../../environments/dev.environment';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -17,6 +17,8 @@ export class NavbarComponent {
   userToDisplay$ = this.authService.getUserToDisplay();
   userToDisplay: UserToDisplay = {} as UserToDisplay;
   userSubscription: Subscription;
+  isProfileDropdownOpen = false;
+  isLanguagesDropdownOpen = false;
 
   constructor(
     private router: Router, 
@@ -36,7 +38,6 @@ export class NavbarComponent {
     });
   }
 
-
   isAdmin() {
     return this.authService.isAdmin();
   }
@@ -55,9 +56,12 @@ export class NavbarComponent {
     this.userService.clearData();
   }
 
-  picture() {
-    if (this.isLoggedIn())
-      return this.userToDisplay.contenthash;
-    else return 'user_icon.png';
+  toggleProfileDropdown() {
+    this.isProfileDropdownOpen = !this.isProfileDropdownOpen;
   }
+
+  toogleLanguagesDropdown() {
+    this.isLanguagesDropdownOpen = !this.isLanguagesDropdownOpen;
+  }
+
 }

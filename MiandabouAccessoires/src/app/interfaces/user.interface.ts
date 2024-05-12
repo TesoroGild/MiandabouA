@@ -27,5 +27,6 @@ export interface UserToDisplay {
     contenthash?: string;
     status: string;
     lastLogin: string;
+    token: string;
     //deliveryAddress: string;
 }
