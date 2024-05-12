@@ -129,8 +129,8 @@ export class RegisterComponent {
         if (roleValue == "admin" || roleValue == "employee")
           token = this.authService.getToken() as string;
         this.userService.createUser(userToCreate).subscribe((userCreated: any) => {
-          this.authService.setUserToDisplay(userCreated.user);
-          if (userCreated.user.email != null && userCreated.user.email != '') {
+          if (userCreated.user!= null && userCreated.user != undefined) {
+            this.authService.setUserToDisplay(userCreated.user);
             this.snackBar.open("Connexion reussie!", "", {
               duration: 3000,
               horizontalPosition: 'center',
@@ -140,6 +140,13 @@ export class RegisterComponent {
             this.registerForm.reset();
             this.router.navigate(['']);
             console.log("REGISTER: USER CREATE");
+          } else {
+            this.snackBar.open(userCreated.msg, "", {
+              duration: 3000,
+              horizontalPosition: 'center',
+              verticalPosition: 'bottom',
+              panelClass: 'fail'
+            });
           }
         });//, token
       } else this.registerForm.markAllAsTouched();

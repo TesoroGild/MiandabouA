@@ -34,11 +34,11 @@ export class AuthService {
     return localStorage.getItem('token') != null;
   }
 
-  logIn(userCredentials: UserCredentials) {
+  logIn(userToConnect: FormData) {
     //<LoginResponse>
     return this.http.post<any>(
-      `${environment.backendUrl}/php/usersConnect.php`, 
-      userCredentials
+      `${environment.backendUrl}/php/users/userLogin.php`, 
+      userToConnect
     );
     //const loginSucced = loginResponse.loginSucced !== null && loginResponse.loginSucced !== '';
 

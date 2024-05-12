@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../services/connection/auth.service';
 import { BehaviorSubject } from 'rxjs';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserCredentials } from '../../interfaces/user-credentials.interface';
 import { Router } from '@angular/router';
 
@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent {
 
-  loginForm = this.formBuilder.group({
+  loginForm: FormGroup = this.formBuilder.group({
     email: [
       null,
       [
@@ -48,15 +48,15 @@ export class LoginComponent {
       console.log("LOGIN: USER NONCONNECTED");
       let emailValue = this.loginForm.get("email")?.value;
       let passwordValue = this.loginForm.get("password")?.value;
+      const userToConnect = new FormData();
+      userToConnect.append("email", this.loginForm.get("email")?.value);
+      userToConnect.append("password", this.loginForm.get("password")?.value);
 
       if (emailValue != null && passwordValue != null) {
-        let userCredentials: UserCredentials = {
-          email: emailValue,
-          password: passwordValue,
-        };
-        this.authService.logIn(userCredentials).subscribe((userConnected: any) => {
-          this.authService.setUserToDisplay(userConnected.user);
-          if (userConnected.user.email != null && userConnected.user.email != '') {
+        this.authService.logIn(userToConnect).subscribe((userConnected: any) => {
+          console.log(userConnected.user);
+          if (userConnected.user != null && userConnected.user != undefined) {
+            this.authService.setUserToDisplay(userConnected.user);
             this.snackBar.open("Connexion reussie!", "", {
               duration: 3000,
               horizontalPosition: 'center',
@@ -66,6 +66,14 @@ export class LoginComponent {
             this.loginForm.reset();
             this.router.navigate(['']);
             console.log("LOGIN: USER CONNECTED");
+          } else {
+            this.snackBar.open(userConnected.msg, "", {
+              duration: 3000,
+              horizontalPosition: 'center',
+              verticalPosition: 'bottom',
+              panelClass: 'fail'
+            });
+            this.loginForm.reset();
           }
         });
       } else this.loginForm.markAllAsTouched();
