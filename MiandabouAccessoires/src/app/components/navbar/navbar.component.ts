@@ -56,7 +56,7 @@ export class NavbarComponent {
     this.userService.clearData();
   }
 
-  toggleProfileDropdown() {
+  toogleProfileDropdown() {
     this.isProfileDropdownOpen = !this.isProfileDropdownOpen;
   }
 
@@ -64,4 +64,8 @@ export class NavbarComponent {
     this.isLanguagesDropdownOpen = !this.isLanguagesDropdownOpen;
   }
 
+  picture() {
+    if (this.userToDisplay.contenthash) return `${environment.backendUrl}/images/${this.userToDisplay.contenthash}`
+    else return "../../../assets/img/user_icon.png";
+  }
 }

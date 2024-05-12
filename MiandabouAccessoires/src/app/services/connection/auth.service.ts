@@ -40,34 +40,14 @@ export class AuthService {
       `${environment.backendUrl}/php/users/userLogin.php`, 
       userToConnect
     );
-    //const loginSucced = loginResponse.loginSucced !== null && loginResponse.loginSucced !== '';
-
-    // if (loginResponse.loginSucced !== null 
-    //   && loginResponse.loginSucced !== '') {
-    //   this.setSession(loginResponse);
-    //   this.userToDisplay = loginResponse;
-    // };
-    // console.log(loginResponse);
-    // console.log(this.userToDisplay);
-    // console.log(loginSucced);
-    // return this.userToDisplay;
   }
 
-  async logOut() {
+  logOut() {
     const qparams = { 'id': 0 };
-    const logoutResponse = await this.http.post<any>(
-      `${environment.backendUrl}/php/userDeco.php`, 
-      { params: qparams }
-    ).toPromise();
-    const logoutSucced = logoutResponse.msg !== null && logoutResponse.msg !== '';
-
-    if (logoutSucced) {
-      this.unsetSession();
-      //this.userToDisplay = {} as UserToDisplay;
-    }
-    console.log(logoutResponse);
-    console.log(logoutSucced);
-    return logoutSucced;
+    return this.http.post<any>(
+      `${environment.backendUrl}/php/users/userLogout.php`, 
+      { /*params: qparams*/ }
+    );
   }
 
   isAdmin() {
@@ -104,6 +84,14 @@ export class AuthService {
     //this.userToDisplay = user;
     this.userToDisplay.next(user);
     this.setSession(user.token);
+    return this.userToDisplay.asObservable();
+    //console.log(this.userToDisplay);
+  }
+
+  unsetUserToDisplay() {
+    //this.userToDisplay = user;
+    this.userToDisplay.next({} as UserToDisplay);
+    this.unsetSession();
     return this.userToDisplay.asObservable();
     //console.log(this.userToDisplay);
   }

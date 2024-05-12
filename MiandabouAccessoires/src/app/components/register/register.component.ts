@@ -148,7 +148,7 @@ export class RegisterComponent {
               panelClass: 'fail'
             });
           }
-        });//, token
+        });
       } else this.registerForm.markAllAsTouched();
     }
   }
