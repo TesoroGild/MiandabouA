@@ -8,4 +8,6 @@ export interface Item {
     video : string;
     price : string;
     quantity: number;
+    promo: number;
+    datePromoFin: string;
 }

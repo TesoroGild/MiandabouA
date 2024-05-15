@@ -20,6 +20,7 @@ import { PwdrecoveryComponent } from './components/pwdrecovery/pwdrecovery.compo
 import { RegisterComponent } from './components/register/register.component';
 import { BillComponent } from './components/bill/bill.component';
 import { ContactComponent } from './components/contact/contact.component';
+import { LazyLoadImageModule } from 'ng-lazyload-image';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { ContactComponent } from './components/contact/contact.component';
     HttpClientModule,
     AppRoutingModule,
     MatSnackBarModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    LazyLoadImageModule
   ],
   providers: [HttpClientModule],
   bootstrap: [AppComponent],
