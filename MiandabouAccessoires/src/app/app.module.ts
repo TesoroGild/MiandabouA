@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { ItemComponent } from './components/item/item.component';
 import { UserComponent } from './components/user/user.component';
-import { ChartComponent } from './components/chart/chart.component';
+import { CartComponent } from './components/cart/cart.component';
 import { AboutComponent } from './components/about/about.component';
 import { LoginComponent } from './components/login/login.component';
 import { LogoutComponent } from './components/logout/logout.component';
@@ -26,7 +26,7 @@ import { ContactComponent } from './components/contact/contact.component';
     AppComponent,
     AboutComponent,
     BillComponent,
-    ChartComponent,
+    CartComponent,
     ContactComponent,
     FootbarComponent,
     HomeComponent,

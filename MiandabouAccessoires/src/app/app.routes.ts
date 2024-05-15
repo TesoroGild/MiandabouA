@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AboutComponent } from './components/about/about.component';
-import { ChartComponent } from './components/chart/chart.component';
+import { CartComponent } from './components/cart/cart.component';
 import { HomeComponent } from './components/home/home.component';
 import { ItemComponent } from './components/item/item.component';
 import { LoginComponent } from './components/login/login.component';
@@ -18,7 +18,7 @@ import { RegisterComponent } from './components/register/register.component';
 export const routes: Routes = [
     { path: 'about', component: AboutComponent },
     { path: 'bill', component: BillComponent },
-    { path: 'chart', component: ChartComponent },
+    { path: 'cart', component: CartComponent },
     { path: 'contact', component: ContactComponent },
       //{ path: 'dev/:id/modifier', component: DevComponent },
       //{ path: 'dev/:id/modifier', component: DevComponent, canActivate: [AuthGuard] },

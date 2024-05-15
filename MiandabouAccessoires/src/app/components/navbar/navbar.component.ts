@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../services/connection/auth.service';
 import { UserToDisplay } from '../../interfaces/user.interface';
 import { UserService } from '../../services/user/user.service';
-import { ChartService } from '../../services/chart/chart.service';
+import { CartService } from '../../services/cart/cart.service';
 import { environment } from '../../../environments/dev.environment';
 import { Subscription } from 'rxjs';
 
@@ -24,7 +24,7 @@ export class NavbarComponent {
     private router: Router, 
     public authService: AuthService,
     private userService: UserService,
-    private chartService: ChartService
+    private cartService: CartService
   ) { 
     this.userSubscription = this.userToDisplay$.subscribe((u) => {
       this.userToDisplay = u;
@@ -52,7 +52,7 @@ export class NavbarComponent {
 
   logOut() {
     this.router.navigate(['/logout']);
-    this.chartService.emptyChart();
+    this.cartService.emptyCart();
     this.userService.clearData();
   }
 

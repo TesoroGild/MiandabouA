@@ -3,7 +3,8 @@ export interface Item {
     category: string;
     name: string;
     description : string;
-    picture : string;
+    picture: string;
+    contenthash : string;
     video : string;
     price : string;
     quantity: number;
