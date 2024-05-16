@@ -1,9 +1,21 @@
 <div class="mx-auto max-w-screen-2xl">
     <div class="flex bg-gradient-to-r from-gray-100 via-gray-300 to-gray-200">
         <div class="w-1/2">
-            <p>Envie d'un nouveau look?</p>
-            <p>Nous avons exactement ce qu'il vous faut.</p>
-            <p>Jettez-y un coup d'oeil!</p>
+            <div class="bg-gray-500 w-60 h-[10vh] flex justify-center items-center">
+                <p class="font-serif font-normal text-lg">
+                    Envie d'un nouveau look?
+                </p>
+            </div>
+            <div class="bg-gray-500 w-96 h-[10vh] flex justify-center items-center">
+                <span class="font-serif font-thin text-lg">
+                    Nous avons exactement ce qu'il vous faut.
+                </span>
+            </div>
+            <div class="bg-[#e7cc96] w-60 h-[10vh] rounded-lg flex justify-center items-center">
+                <button class="font-serif text-lg">
+                    Jettez-y un coup d'oeil!
+                </button>
+            </div>
         </div>
         <div class="w-1/2">
             <img src="../../../assets/img/acceuil1.png" alt="shop image">
@@ -66,7 +78,8 @@
 
     <!-- BEST SELLING -->
     <div class="my-8 h-screen bg-[#EEEEF0]">
-        <p class="mx-4">Meilleures ventes</p>
+        <p class="mx-4 font-thin text-3xl text-gray-900 text-center pt-6">Nos meilleures ventes</p>
+        <p class="text-center"><span class="absolute w-20 h-1 bg-[#e7cc96]"></span></p>
         <ng-container *ngIf="isTestEmpty(); else bestSellingEmpty">
             <section id="bestSelling" class="splide h-5/6">
                 <div class="splide__track h-full bg-white dark:bg-gray-800 dark:border-gray-700">
@@ -137,7 +150,8 @@
 
     <!-- BLOG -->
     <div class="mb-8">
-        <p class="mx-4">Nos blogs</p>
+        <p class="mx-4 font-thin text-3xl text-gray-900 text-center">Nos blogs</p>
+        <p class="text-center"><span class="absolute w-20 h-1 bg-[#e7cc96]"></span></p>
         <ng-container *ngIf="isTestEmpty(); else blogEmpty">
             <div class="grid-cols-1 sm:grid md:grid-cols-3 ">
                 <div *ngFor="let blog of test2 | slice:0:2">
@@ -189,10 +203,40 @@
                 </div>
             </div>
         </ng-template>
-    
     </div>
 
     <div class="mb-8 bg-gradient-to-r from-gray-100 via-gray-300 to-gray-200">
-        <p class="mx-4">Recevoir nos dernières nouvelles via</p>
+        <p class="mx-4 font-manrope font-medium text-3xl leading-9 text-gray-900 text-center pt-6">Notre bulettin d'informations</p>
+        <p class="text-center mb-8"><span class="absolute w-20 h-1 bg-[#e7cc96]"></span></p>
+        <div class="flex text-center justify-center">
+            <div>
+                <p class="mx-4">Recevoir nos dernières nouvelles</p>
+            </div>
+            <div>
+                <form (ngSubmit)="enableAlerts()" [formGroup]="alertForm" class="w-full max-w-sm mx-4">
+                    <div class="flex items-center border-b border-teal-500 py-2">
+                        <input type="email" name="email" id="email" formControlName="email"
+                            class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+                            type="text" placeholder="john@Doe.ca">
+                        <button
+                            class="flex-shrink-0 border-[#e7cc96] text-sm border-4 text-white hover:text-teal-800 py-1 px-2 rounded bg-[#e7cc96]"
+                            type="button">
+                            Sign Up
+                        </button>
+                        <button
+                            class="flex-shrink-0 border-transparent border-4 text-[#e7cc96] hover:text-teal-800 text-sm py-1 px-2 rounded"
+                            type="button">
+                            Cancel
+                        </button>
+                    </div>
+                    <span *ngIf="emailEmpty()" class="text-xs font-light text-red-500" style="margin: 0px;">Veuillez
+                        saisir un email.</span>
+                    <span *ngIf="emailFormat()" class="text-xs font-light text-red-500" style="margin: 0px;">Format
+                        email invalid!</span>
+                    <span *ngIf="emailLength()" class="text-xs font-light text-red-500" style="margin: 0px;">Vous
+                        avez dépassé la taille maximale de 35 caractères.</span>
+                </form>
+            </div>
+        </div>
     </div>
 </div>

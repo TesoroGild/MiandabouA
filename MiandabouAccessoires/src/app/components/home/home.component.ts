@@ -14,6 +14,7 @@ import '@splidejs/splide/css/sea-green';
 import '@splidejs/splide/css/core';
 import { Blog } from '../../interfaces/blog.interface';
 import { Router } from '@angular/router';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-home',
@@ -172,7 +173,18 @@ export class HomeComponent {
     }
   ];
 
-  constructor(private router: Router) {}
+  alertForm: FormGroup = this.formBuilder.group({
+    email: [
+      null,
+      [
+        Validators.required,
+        Validators.pattern('^[^\s@]+@[^\s@]+\.[^\s@]{2,}$'),
+        Validators.maxLength(35),
+      ],
+    ]
+  });
+
+  constructor(private router: Router, private formBuilder: FormBuilder) {}
 
   ngAfterViewInit(): void {
     new Splide('.splide', {
@@ -218,5 +230,33 @@ export class HomeComponent {
 
   blogsPage () {
     this.router.navigate(['/blog']);
+  }
+
+  enableAlerts () {
+
+  }
+
+  //email
+  emailEmpty(): boolean {
+    return this.showError("email", "required");
+  }
+
+  emailFormat(): boolean {
+    return this.alertForm.get('email')!.hasError('pattern') 
+      && this.alertForm.get('email')!.touched;
+  }
+
+  emailLength(): boolean {
+    return this.alertForm.get('email')!.hasError('maxlength') 
+      && this.alertForm.get('email')!.touched;
+  }
+
+  private showError(
+    field: "email", 
+    error: string): boolean {
+    return (
+      this.alertForm.controls[field].hasError(error) &&
+      (this.alertForm.controls[field].dirty || this.alertForm.controls[field].touched)
+    );
   }
 }
