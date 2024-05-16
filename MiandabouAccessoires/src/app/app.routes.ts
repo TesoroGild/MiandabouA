@@ -12,11 +12,13 @@ import { AuthGuard } from './services/connection/auth.guard';
 import { AdminGuard } from './services/admin/admin.guard';
 import { ContactComponent } from './components/contact/contact.component';
 import { BillComponent } from './components/bill/bill.component';
+import { BlogComponent } from './components/blog/blog.component';
 import { PwdrecoveryComponent } from './components/pwdrecovery/pwdrecovery.component';
 import { RegisterComponent } from './components/register/register.component';
 
 export const routes: Routes = [
     { path: 'about', component: AboutComponent },
+    { path: 'blog', component: BlogComponent },
     { path: 'bill', component: BillComponent },
     { path: 'cart', component: CartComponent },
     { path: 'contact', component: ContactComponent },

@@ -12,6 +12,8 @@ import '@splidejs/splide/css/sea-green';
 
 // or only core styles
 import '@splidejs/splide/css/core';
+import { Blog } from '../../interfaces/blog.interface';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -123,7 +125,54 @@ export class HomeComponent {
     }
   ];
 
-  constructor() {}
+  test2: Blog [] = [
+    {
+      id: '1',
+      title: 'Unique products',
+      description:
+        'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore...',
+      author: 'Mariam',
+      contenthash: '',
+      picture: 'https://tecdn.b-cdn.net/img/new/standard/city/044.webp',
+      video: '',
+      datePosted: '2024-05-16'
+    },
+    {
+      id: '2',
+      title: 'Our contribution to the environment',
+      description:
+        'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore...',
+      author: 'Eva',
+      contenthash: '',
+      picture: 'https://tecdn.b-cdn.net/img/new/standard/city/043.webp',
+      video: '',
+      datePosted: '2024-05-16'
+    },
+    {
+      id: '3',
+      title: 'LGBTQ+ community',
+      description:
+        'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore...',
+      author: 'Kellygrace',
+      contenthash: '',
+      picture: 'https://tecdn.b-cdn.net/img/new/standard/city/042.webp',
+      video: '',
+      datePosted: '2024-05-16'
+    },
+    {
+      id: '4',
+      title: 'Our Projets',
+      description:
+        'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore...',
+      author: 'Mariam',
+      contenthash: '',
+      picture: 'https://tecdn.b-cdn.net/img/new/standard/city/041.webp',
+      video: '',
+      datePosted: '2024-05-16'
+    }
+  ];
+
+  constructor(private router: Router) {}
 
   ngAfterViewInit(): void {
     new Splide('.splide', {
@@ -137,7 +186,7 @@ export class HomeComponent {
 
     new Splide(`#bestSelling`, {
       type: 'loop',
-      perPage: 5,
+      perPage: 4,
       autoplay: true,
       duration: 3000,
       pagination: false,
@@ -165,5 +214,9 @@ export class HomeComponent {
   promoPrice (price: string, promo: number) {
     let priceNumber = parseInt(price);
     return priceNumber - (priceNumber * promo) / 100;
+  }
+
+  blogsPage () {
+    this.router.navigate(['/blog']);
   }
 }
