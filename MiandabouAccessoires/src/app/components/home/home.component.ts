@@ -1,20 +1,21 @@
 import { Component } from '@angular/core';
 import { Item } from '../../interfaces/item.interface';
 import Splide from '@splidejs/splide';
+import { Blog } from '../../interfaces/blog.interface';
+import { Router } from '@angular/router';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
+//import { mailService } from '../../services/email/mail.service';
+
 // Default theme
 import '@splidejs/splide/css';
-
 
 // or other themes
 import '@splidejs/splide/css/skyblue';
 import '@splidejs/splide/css/sea-green';
 
-
 // or only core styles
 import '@splidejs/splide/css/core';
-import { Blog } from '../../interfaces/blog.interface';
-import { Router } from '@angular/router';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-home',
@@ -184,7 +185,12 @@ export class HomeComponent {
     ]
   });
 
-  constructor(private router: Router, private formBuilder: FormBuilder) {}
+  constructor(
+    private router: Router, 
+    private formBuilder: FormBuilder,
+    private snackBar: MatSnackBar,
+    //private mailService: MailService
+  ) {}
 
   ngAfterViewInit(): void {
     new Splide('.splide', {
@@ -258,5 +264,34 @@ export class HomeComponent {
       this.alertForm.controls[field].hasError(error) &&
       (this.alertForm.controls[field].dirty || this.alertForm.controls[field].touched)
     );
+  }
+
+  subscribeNewsLetter () {
+    console.log("HOME: NEWSLETTER SUBCRIPTION");
+      let emailValue = this.alertForm.get("email")?.value;
+      const newsLetterSubscription = new FormData();
+      newsLetterSubscription.append("email", this.alertForm.get("email")?.value);
+
+      if (emailValue != null) {
+        /*this.mailService.subscribeNewsLetter(newsLetterSubscription).subscribe((subscriptionResponse: any) => {
+          console.log(subscriptionResponse);
+          if (subscriptionResponse != null && subscriptionResponse != "") {
+            this.snackBar.open("Inscription reussie!", "", {
+              duration: 3000,
+              horizontalPosition: 'center',
+              verticalPosition: 'bottom',
+              panelClass: 'success'
+            });
+            this.alertForm.reset();
+          } else {
+            this.snackBar.open(subscriptionResponse.msg, "", {
+              duration: 3000,
+              horizontalPosition: 'center',
+              verticalPosition: 'bottom',
+              panelClass: 'fail'
+            });
+          }
+        });*/
+      } else this.alertForm.markAllAsTouched();
   }
 }
