@@ -65,7 +65,7 @@ export class NavbarComponent {
   }
 
   picture() {
-    if (this.userToDisplay.contenthash) return `${environment.backendUrl}/images/${this.userToDisplay.contenthash}`
+    if (this.userToDisplay.contenthash) return `${environment.backendUrl}/images/userPic/${this.userToDisplay.contenthash}`
     else return "../../../assets/img/user_icon.png";
   }
 }

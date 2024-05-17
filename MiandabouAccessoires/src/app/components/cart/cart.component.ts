@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
-import { ItemCart } from '../../interfaces/item-cart.interface';
+import { ItemCart } from '../../interfaces/item.interface';
 import { environment } from '../../../environments/dev.environment';
+import { BehaviorSubject } from 'rxjs';
+import { CartService } from '../../services/cart/cart.service';
 
 @Component({
   selector: 'app-cart',
@@ -9,68 +11,16 @@ import { environment } from '../../../environments/dev.environment';
 })
 export class CartComponent {
 
-  constructor() {}
+  constructor(
+    private cartService: CartService
+  ) {}
 
-  ngOnInit() {}
-
-  test: ItemCart[] = [
-    {
-      id: '1',
-      name: 'test1',
-      price: '1000',
-      quantityBye: 1,
-      contenthash: '',
-      picture: '../../../assets/img/test1.jpeg'
-    },
-    {
-      id: '2',
-      name: 'test2',
-      price: '2000',
-      quantityBye: 1,
-      contenthash: '',
-      picture: '../../../assets/img/test2.png'
-    },
-    {
-      id: '3',
-      name: 'test3',
-      price: '3000',
-      quantityBye: 5,
-      contenthash: '',
-      picture: '../../../assets/img/test3.png'
-    },
-    {
-      id: '4',
-      name: 'test4',
-      price: '4000',
-      quantityBye: 5,
-      contenthash: '',
-      picture: '../../../assets/img/test4.png'
-    },
-    {
-      id: '5',
-      name: 'test5',
-      price: '500',
-      quantityBye: 3,
-      contenthash: '',
-      picture: '../../../assets/img/test5.png'
-    },
-    {
-      id: '6',
-      name: 'test6',
-      price: '2000',
-      quantityBye: 2,
-      contenthash: '',
-      picture: '../../../assets/img/test6.png'
-    },
-    {
-      id: '7',
-      name: 'test7',
-      price: '3000',
-      quantityBye: 1,
-      contenthash: '',
-      picture: '../../../assets/img/test7.png'
-    }
-  ];
+  ngOnInit() {
+    this.cartService.getItemsCartToDisplay().subscribe(items => {
+      this.cart = items;
+      console.log(this.cart)
+    });
+  }
 
   cart: ItemCart [] = [];
   total: number = 0;
@@ -102,7 +52,7 @@ export class CartComponent {
   }
 
   picture (item: ItemCart) {
-    return `${environment.backendUrl}/images/${item.contenthash}`
+    return `${environment.backendUrl}/images/itemPic/${item.item.contenthash}`
   }
 
   openModal() {

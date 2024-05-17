@@ -11,3 +11,8 @@ export interface Item {
     promo: number;
     datePromoFin: string;
 }
+
+export interface ItemCart {
+    item: Item;
+    quantityBuy: number;
+}

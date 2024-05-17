@@ -5,7 +5,6 @@ import { Blog } from '../../interfaces/blog.interface';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-//import { mailService } from '../../services/email/mail.service';
 
 // Default theme
 import '@splidejs/splide/css';
@@ -16,6 +15,7 @@ import '@splidejs/splide/css/sea-green';
 
 // or only core styles
 import '@splidejs/splide/css/core';
+import { EmailService } from '../../services/email/email.service';
 
 @Component({
   selector: 'app-home',
@@ -189,7 +189,7 @@ export class HomeComponent {
     private router: Router, 
     private formBuilder: FormBuilder,
     private snackBar: MatSnackBar,
-    //private mailService: MailService
+    private mailService: EmailService
   ) {}
 
   ngAfterViewInit(): void {
