@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
-import { ItemCart } from '../../interfaces/item.interface';
+import { Item, ItemCart } from '../../interfaces/item.interface';
 import { environment } from '../../../environments/dev.environment';
-import { BehaviorSubject } from 'rxjs';
 import { CartService } from '../../services/cart/cart.service';
 
 @Component({
@@ -18,15 +17,14 @@ export class CartComponent {
   ngOnInit() {
     this.cartService.getItemsCartToDisplay().subscribe(items => {
       this.cart = items;
-      console.log(this.cart)
     });
   }
 
   cart: ItemCart [] = [];
   total: number = 0;
   subTotal: number = 0;
-  Tvq: number = 0;
-  Tps: number = 0;
+  Tvq: number = 9.975;
+  Tps: number = 5;
   modal: boolean = false;
 
   cartEmpty() {
@@ -35,12 +33,36 @@ export class CartComponent {
     else return true;
   }
 
-  addItem () {
+  addToCart (item: Item) {
+    this.cartService.addToCart(item);
+  }
+
+  removeFromCart (item: Item) {
+    this.cartService.removeFromCart(item);
+  }
+
+  deleteFromCart (item: Item) {
+    this.cartService.deleteFromCart(item);
+  }
+
+  getQuantityInCart (id: string) {
+    return this.cartService.getQuantityBuy(id);
+  }
+
+  totalCalculate () {
+    
+  }
+
+  subTotalCalculate () {
 
   }
 
-  removeItem (id: string) {
-    
+  TvqCalculate () {
+
+  }
+
+  TpsCalculate () {
+
   }
 
   order () {

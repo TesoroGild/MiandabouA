@@ -8,52 +8,28 @@ import { ItemService } from '../item/item.service';
 })
 export class CartService {
 
-  private itemsCartSubject = new BehaviorSubject<ItemCart[]>([]);
+  private itemsCartSubject: BehaviorSubject<ItemCart[]>;
 
   cart: ItemCart[] = [];
 
-  // testItem: Item[] = [];
-  // testCart: ItemCart[] = [
-  //   {
-  //     item: this.testItem[0],
-  //     quantityBuy: 3
-  //   }, 
-  //   {
-  //     item: this.testItem[1],
-  //     quantityBuy: 1
-  //   }, 
-  //   {
-  //     item: this.testItem[2],
-  //     quantityBuy: 2
-  //   }, 
-  //   {
-  //     item: this.testItem[3],
-  //     quantityBuy: 3
-  //   },
-  //   {
-  //     item: this.testItem[4],
-  //     quantityBuy: 1
-  //   }
-  // ]
-
   constructor (
     private itemService: ItemService
-  ) { 
-    //A remplacer par les vraies valeurs
-    this.setItemsCartToDisplay(this.testCart);
-    this.itemService.getItemsToDisplay().subscribe(items => {
-      this.testItem = items;
-      console.log(this.testItem)
-    })
+  ) {
+    this.itemsCartSubject = new BehaviorSubject<ItemCart[]>([]);
   }
 
   setItemsCartToDisplay (items: ItemCart[]) {
     this.itemsCartSubject.next(items);
-    //return this.itemsCartSubject.asObservable();
   }
 
   getItemsCartToDisplay () {
     return this.itemsCartSubject.asObservable();
+  }
+
+  getQuantityBuy (id: string) {
+    let index = this.cart.find(item => item.item.id === id)?.quantityBuy;
+    if (index) return index;
+    else return 0;
   }
 
   emptyCart () {

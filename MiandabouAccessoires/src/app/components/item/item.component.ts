@@ -25,7 +25,6 @@ export class ItemComponent {
 
   getItems () {
     this.itemService.getItems().subscribe(items => {
-      console.log(items.items);
       if (items.items != null && items.items != undefined) {
         this.items = items.items;
         this.itemService.setItemsToDisplay(this.items);
@@ -33,16 +32,16 @@ export class ItemComponent {
     });
   }
 
-  addToCart () {
-
+  addToCart (item: Item) {
+    this.cartService.addToCart(item);
   }
 
-  removeFromCart () {
-
+  removeFromCart (item: Item) {
+    this.cartService.removeFromCart(item);
   }
 
-  changeQuantity () {
-    
+  getQuantityInCart (id: string) {
+    return this.cartService.getQuantityBuy(id);
   }
 
   picture (contenthash: any) {
