@@ -10,11 +10,16 @@ import { environment } from '../../../environments/dev.environment';
 export class ItemService {
 
   private itemsToDisplay: BehaviorSubject<Item[]>;
+  private itemsInPromotions: BehaviorSubject<Item[]>;
+  private bestItemsSold: BehaviorSubject<Item[]>;
+  itd: Item[] = [];
 
   constructor(
     private http: HttpClient
   ) {
-    this.itemsToDisplay = new BehaviorSubject<Item[]>([])
+    this.itemsToDisplay = new BehaviorSubject<Item[]>([]);
+    this.itemsInPromotions = new BehaviorSubject<Item[]>([]);
+    this.bestItemsSold = new BehaviorSubject<Item[]>([]);
   }
 
   getItems () {
@@ -29,6 +34,35 @@ export class ItemService {
 
   getItemsToDisplay () {
     return this.itemsToDisplay.asObservable();
+  }
+
+  getPromoItems (): Promise<Item[]> {
+    return new Promise((resolve, reject) => {
+      let promos: Item[] = [];
+      this.itemsToDisplay.subscribe((items: any) => {
+        let tmp1: Item[] = items.items;
+        promos = tmp1.filter((item: Item) => Number(item.promo) !== 0);
+        this.itemsInPromotions.next(promos);
+        resolve(promos);
+      },
+      error => reject(error)
+      )
+    });
+  }
+
+  getBestSellingItems (): Promise<Item[]> {
+    return new Promise((resolve, reject) => {
+      let bestSaled: Item[] = [];
+      this.itemsToDisplay.subscribe((items: any) => {
+        let tmp2: Item[] = items.items;
+        bestSaled = tmp2.sort((a: Item, b: Item) => b.totalSell - a.totalSell);
+        bestSaled = bestSaled.slice(0, 10);
+        this.bestItemsSold.next(bestSaled);
+        resolve(bestSaled);
+      },
+      error => reject(error)
+      );
+    });
   }
 
   // getData(queryUrl: string,para:any={}) {

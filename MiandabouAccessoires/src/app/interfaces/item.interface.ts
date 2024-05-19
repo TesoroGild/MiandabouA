@@ -1,5 +1,6 @@
 export interface Item {
     id: string;
+    gender: string;
     category: string;
     name: string;
     description : string;
@@ -7,9 +8,15 @@ export interface Item {
     contenthash : string;
     video : string;
     price : string;
-    quantity: number;
+    quantityS: number;
+    quantityM: number;
+    quantityL: number;
+    quantityXl: number;
     promo: number;
     datePromoFin: string;
+    //penser a faire un tableau de rate car ce n'est pas une seule personne qui note le produit
+    rate: number;
+    totalSell: number;
 }
 
 export interface ItemCart {

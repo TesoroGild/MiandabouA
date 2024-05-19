@@ -35,11 +35,11 @@
 
     <!-- PROMO -->
     <div class="mt-8 flex h-screen">
-        <ng-container *ngIf="isTestEmpty(); else promoEmpty">
+        <ng-container *ngIf="isPromoNotEmpty(); else promoEmpty">
             <section class="splide h-full ">
                 <div class="splide__track h-full bg-white border border-gray-200 shadow dark:bg-gray-800 dark:border-gray-700">
                     <ul class="splide__list">
-                        <li *ngFor="let item of test" class="splide__slide px-8">
+                        <li *ngFor="let item of promos" class="splide__slide px-8">
                             <div class="flex">
                                 <div class="w-1/2 flex-wrap pl-12">
                                     <div class="w-full pt-20">
@@ -69,7 +69,7 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <img class="p-2" style="width: 95%; height: 90%" src="{{item.picture}}" alt="promoItem">
+                                    <img class="p-2" style="width: 95%; height: 90%" src="{{ picture(item.contenthash) }}" alt="promoItem">
                                 </div>
                             </div>
                         </li>
@@ -91,15 +91,15 @@
     <div class="my-8 h-screen bg-[#EEEEF0]">
         <p class="mx-4 font-thin text-3xl text-gray-900 text-center pt-6">Nos meilleures ventes</p>
         <p class="text-center"><span class="absolute w-20 h-1 bg-[#e7cc96]"></span></p>
-        <ng-container *ngIf="isTestEmpty(); else bestSellingEmpty">
+        <ng-container *ngIf="isBestSellingNotEmpty(); else bestSellingEmpty">
             <section id="bestSelling" class="splide h-5/6">
                 <div class="splide__track h-full bg-white dark:bg-gray-800 dark:border-gray-700">
                     <ul class="splide__list">
-                        <li *ngFor="let item of test" class="splide__slide px-4 bg-clip-padding">                  
+                        <li *ngFor="let item of bestSelling" class="splide__slide px-4 bg-clip-padding">                  
                             <div class="h-full bg-white dark:bg-gray-800 dark:border-gray-700" style="background-clip: padding-box; box-shadow: 0 0 0 2rem #EEEEF0;">
                                 <div class="h-4/6">
                                     <a href="#">
-                                        <img class="w-full h-full p-1" src="{{ item.picture }}" alt="bestSellingItem" />
+                                        <img class="w-full h-full p-1" src="{{ picture(item.contenthash) }}" alt="bestSellingItem" />
                                     </a>
                                 </div>
                                 <div class="h-2/6 px-5 pt-4">
@@ -163,7 +163,7 @@
     <div class="mb-8">
         <p class="mx-4 font-thin text-3xl text-gray-900 text-center">Nos blogs</p>
         <p class="text-center"><span class="absolute w-20 h-1 bg-[#e7cc96]"></span></p>
-        <ng-container *ngIf="isTestEmpty(); else blogEmpty">
+        <ng-container *ngIf="isBlogNotEmpty(); else blogEmpty">
             <div class="grid-cols-1 sm:grid md:grid-cols-3 ">
                 <div *ngFor="let blog of test2 | slice:0:2">
                     <div

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Item, ItemCart } from '../../interfaces/item.interface';
 import { environment } from '../../../environments/dev.environment';
 import { CartService } from '../../services/cart/cart.service';
+import { AuthService } from '../../services/connection/auth.service';
 
 @Component({
   selector: 'app-cart',
@@ -11,7 +12,8 @@ import { CartService } from '../../services/cart/cart.service';
 export class CartComponent {
 
   constructor(
-    private cartService: CartService
+    private cartService: CartService,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -25,7 +27,8 @@ export class CartComponent {
   subTotal: number = 0;
   Tvq: number = 9.975;
   Tps: number = 5;
-  modal: boolean = false;
+  paymentModal: boolean = false;
+  loginModal: boolean = false;
 
   cartEmpty() {
     if (this.cart.length != 0)
@@ -50,19 +53,40 @@ export class CartComponent {
   }
 
   totalCalculate () {
-    
+    return this.subTotal + Number(this.TvqCalculate()) + Number(this.TpsCalculate());
   }
 
   subTotalCalculate () {
-
+    this.subTotal = this.cart.reduce((subTotal, cartItem) => {
+      return subTotal + (Number(cartItem.item.price) * cartItem.quantityBuy);
+    }, 0);
+    return this.subTotal.toFixed(2);
   }
 
   TvqCalculate () {
-
+    return (this.subTotal * (this.Tvq / 100)).toFixed(2);
   }
 
   TpsCalculate () {
+    return (this.subTotal * (this.Tps / 100)).toFixed(2);
+  }
 
+  isUserLoggedIn () {
+    let userIsLoggedIn;
+    this.authService.userIsLoggedIn.subscribe({
+      next: (result) => {
+        userIsLoggedIn = result;
+      }
+    });
+    return userIsLoggedIn;
+  }
+
+  openLoginModal() {
+    this.loginModal = true;
+  }
+
+  closeLoginModal() {
+    this.loginModal = false;
   }
 
   order () {
@@ -77,12 +101,12 @@ export class CartComponent {
     return `${environment.backendUrl}/images/itemPic/${item.item.contenthash}`
   }
 
-  openModal() {
-    this.modal = true;
+  openPaymentModal() {
+    this.paymentModal = true;
   }
 
-  closeModal() {
-    this.modal = false;
+  closePaymentModal() {
+    this.paymentModal = false;
   }
 
 }

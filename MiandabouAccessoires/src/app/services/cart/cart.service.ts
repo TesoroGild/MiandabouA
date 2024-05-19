@@ -27,8 +27,8 @@ export class CartService {
   }
 
   getQuantityBuy (id: string) {
-    let index = this.cart.find(item => item.item.id === id)?.quantityBuy;
-    if (index) return index;
+    let quantity = this.cart.find(item => item.item.id === id)?.quantityBuy;
+    if (quantity) return quantity;
     else return 0;
   }
 
