@@ -18,6 +18,7 @@ import '@splidejs/splide/css/core';
 import { EmailService } from '../../services/email/email.service';
 import { ItemService } from '../../services/item/item.service';
 import { environment } from '../../../environments/dev.environment';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -26,9 +27,61 @@ import { environment } from '../../../environments/dev.environment';
 })
 export class HomeComponent {
 
+  //items$ = this.itemService.getPromoItems();
+  //itemSubscription: Subscription;
+  //items: Item[] = [];
+  promos$ = this.itemService.getPromoItems();
+  promosSubscription: Subscription;
   promos: Item[] = [];
+  bestSelling$ = this.itemService.getBestSellingItems();
+  bestSellingSubscription: Subscription;
   bestSelling: Item[] = [];
   blogs: any[] = [];
+
+  testPromos: Item[] = [
+    {
+      id: '1',
+      name: 'Unique products',
+      description:
+        'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore...',
+      contenthash: '',
+      picture: 'https://tecdn.b-cdn.net/img/new/standard/city/044.webp',
+      video: '',
+      gender: 'male',
+    category: 'top',
+    price : '100',
+    quantityS: 2,
+    quantityM: 3,
+    quantityL: 1,
+    quantityXl: 3,
+    promo: 10,
+    datePromoFin: '2024-05-19',
+    //penser a faire un tableau de rate car ce n'est pas une seule personne qui note le produit
+    rate: 4,
+    totalSell: 5
+    },
+    {
+      id: '2',
+      name: 'Unique pro',
+      description:
+        'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore...',
+      contenthash: '',
+      picture: 'https://tecdn.b-cdn.net/img/new/standard/city/045.webp',
+      video: '',
+      gender: 'female',
+    category: 'bottmo',
+    price : '3000',
+    quantityS: 2,
+    quantityM: 3,
+    quantityL: 1,
+    quantityXl: 3,
+    promo: 25,
+    datePromoFin: '2024-05-19',
+    //penser a faire un tableau de rate car ce n'est pas une seule personne qui note le produit
+    rate: 2,
+    totalSell: 10
+    }
+  ];
 
   test2: Blog [] = [
     {
@@ -93,58 +146,104 @@ export class HomeComponent {
     private formBuilder: FormBuilder,
     private mailService: EmailService,
     private itemService: ItemService
-  ) {}
+  ) {
+    this.promosSubscription = this.promos$.subscribe((p) => {
+      this.promos = p;
+    });
+    this.bestSellingSubscription = this.bestSelling$.subscribe((b) => {
+      this.bestSelling = b;
+    });
+  }
 
   ngOnInit (): void {
     this.getItems();
-    this.getPromos();
-    this.getBestSelling();
+    //this.getPromos();
+    //this.getBestSelling();
     //a supprimer
     this.blogs = this.test2;
   }
 
-  ngAfterViewInit(): void {
-    new Splide('.splide', {
-      type: 'loop',
-      perPage: 1,
-      autoplay: true,
-      duration: 2000,
-      pagination: false,
-      speed: 1000
-    }).mount();
-
-    new Splide(`#bestSelling`, {
-      type: 'loop',
-      perPage: 4,
-      autoplay: true,
-      duration: 3000,
-      pagination: false,
-      speed: 1000,
-      perMove: 1
-    }).mount();
+  ngOnDestroy () {
+    if (this.promosSubscription) {
+      this.promosSubscription.unsubscribe();
+    }
+    if (this.bestSellingSubscription) {
+      this.bestSellingSubscription.unsubscribe();
+    }
   }
 
-  getItems () {
-    this.itemService.getItems().subscribe(items => {
-      if (items.items != null && items.items != undefined) {
-        this.itemService.setItemsToDisplay(items);
+  ngAfterViewInit() {
+    this.promos$.subscribe((p) => {
+      if (p.length !== 0) {
+        console.log("PROMO SLIDER INITIALIZED");
+        new Splide('#promoSplide', {
+          type: 'loop',
+          perPage: 1,
+          autoplay: true,
+          duration: 2000,
+          pagination: false,
+          speed: 1000
+        }).mount();
       }
+    });
+    
+    this.bestSelling$.subscribe((b) => {
+    if (b.length !== 0) {
+      console.log("BEST SELLING SLIDER INITIALIZED");
+      new Splide(`#bestSellingSplide`, {
+        type: 'loop',
+        perPage: 4,
+        autoplay: true,
+        duration: 3000,
+        pagination: false,
+        speed: 1000,
+        perMove: 1,
+        //fixedWidth : '20vw'
+      }).mount();
+    }
     });
   }
 
-  async getPromos () {
-    this.promos = await this.itemService.getPromoItems();
+  getItems () {
+    this.itemService.getItems();
   }
 
-  isPromoNotEmpty(): boolean {
+  // getPromos () {
+  //    = this.itemService.getPromoItems();
+  // }
+  // getPromos () {
+  //   //console.log(this.items)
+  //   //this.promos = this.itemService.getPromoItems();
+  //   //FAIRE TOUS LES SUBSCRIBE DABS LE ITEM SERVICE
+  //   this.itemService.getItemsToDisplay().subscribe(items => {
+  //     if (items.length !== 0) {
+  //       this.promos = items.filter((item: Item) => Number(item.promo) !== 0);
+  //       this.slidePromos();
+  //     }
+  //   })
+  // }
+
+  isPromoNotEmpty() {
     return this.promos.length !== 0;
   }
 
-  async getBestSelling () {
-    this.bestSelling = await this.itemService.getBestSellingItems();
-  }
+  // getBestSelling () {
+  //    = this.itemService.getBestSellingItems();
+  // }
+  // async getBestSelling () {
+  //   //this.bestSelling = await this.itemService.getBestSellingItems();
+  //   //console.log(this.items)
+  //   //this.bestSelling = await this.itemService.getBestSellingItems()
+  //   this.itemService.getItemsToDisplay().subscribe(items => {
+  //     if (items.length !== 0) {
+  //       this.bestSelling = items.sort((a: Item, b: Item) => b.totalSell - a.totalSell);
+  //       this.bestSelling = this.bestSelling.slice(0, 10);
+  //       this.sliderBestSelling();
+  //     }
+  //   })
+  // }
 
-  isBestSellingNotEmpty(): boolean {
+  isBestSellingNotEmpty(){
     return this.bestSelling.length !== 0;
   }
 

@@ -3,6 +3,7 @@ import { CartService } from '../../services/cart/cart.service';
 import { ItemService } from '../../services/item/item.service';
 import { Item } from '../../interfaces/item.interface';
 import { environment } from '../../../environments/dev.environment';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-item',
@@ -11,26 +12,35 @@ import { environment } from '../../../environments/dev.environment';
 })
 export class ItemComponent {
 
+  items$ = this.itemService.getBestSellingItems();
+  itemsSubscription: Subscription;
   items: Item[] = [];
   quantityBuy: number = 0;
 
   constructor (
     private cartService: CartService,
     private itemService: ItemService
-  ) {}
+  ) {
+    this.itemsSubscription = this.items$.subscribe((i) => {
+      this.items = i;
+    });
+  }
 
   ngOnInit() {
     this.getItems();
   }
 
   getItems () {
-    this.itemService.getItems().subscribe(items => {
-      if (items.items != null && items.items != undefined) {
-        this.items = items.items;
-        this.itemService.setItemsToDisplay(this.items);
-      }
-    });
+    this.itemService.getItems();
   }
+  // getItems () {
+  //   this.itemService.getItems().subscribe(items => {
+  //     if (items.items != null && items.items != undefined) {
+  //       this.items = items.items;
+  //       this.itemService.setItemsToDisplay(this.items);
+  //     }
+  //   });
+  // }
 
   addToCart (item: Item) {
     this.cartService.addToCart(item);

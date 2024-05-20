@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Item } from '../../interfaces/item.interface';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, switchMap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/dev.environment';
 
@@ -12,7 +12,6 @@ export class ItemService {
   private itemsToDisplay: BehaviorSubject<Item[]>;
   private itemsInPromotions: BehaviorSubject<Item[]>;
   private bestItemsSold: BehaviorSubject<Item[]>;
-  itd: Item[] = [];
 
   constructor(
     private http: HttpClient
@@ -23,47 +22,69 @@ export class ItemService {
   }
 
   getItems () {
-    return this.http.get<any>(
+    this.http.get<any>(
       `${environment.backendUrl}/php/items/itemsGet.php`
+    ).subscribe((items: any) => {
+      if (items.items != null && items.items != undefined)
+        this.itemsToDisplay.next(items.items);
+      return this.itemsToDisplay.asObservable();
+    });
+  }
+
+  // setItemsToDisplay (items: Item[]) {
+    
+  // }
+
+  // getItemsToDisplay () {
+  //   return this.itemsToDisplay.asObservable();
+  // }
+
+  getPromoItems (): Observable<Item[]> {
+    return this.itemsToDisplay.pipe(
+      switchMap((data) => {
+        // Simulate an update operation and return the new data
+        this.itemsInPromotions.next(data.filter((item: Item) => Number(item.promo) !== 0));
+        return this.itemsInPromotions.asObservable();
+      })
     );
   }
+  // getPromoItems (): Promise<Item[]> {
+  //   return new Promise((resolve, reject) => {
+  //     let promos: Item[] = [];
+  //     this.itemsToDisplay.subscribe((items: any) => {
+  //       let tmp1: Item[] = items;
+  //       promos = tmp1.filter((item: Item) => Number(item.promo) !== 0);
+  //       this.itemsInPromotions.next(promos);
+  //       resolve(promos);
+  //     },
+  //     error => reject(error)
+  //     )
+  //   });
+  // }
 
-  setItemsToDisplay (items: Item[]) {
-    this.itemsToDisplay.next(items);
+  getBestSellingItems (): Observable<Item[]> {
+    return this.itemsToDisplay.pipe(
+      switchMap((data) => {
+        // Simulate an update operation and return the new data
+        this.bestItemsSold.next((data.sort((a: Item, b: Item) => b.totalSell - a.totalSell)).slice(0, 10));
+        return this.bestItemsSold.asObservable();
+      })
+    );
   }
-
-  getItemsToDisplay () {
-    return this.itemsToDisplay.asObservable();
-  }
-
-  getPromoItems (): Promise<Item[]> {
-    return new Promise((resolve, reject) => {
-      let promos: Item[] = [];
-      this.itemsToDisplay.subscribe((items: any) => {
-        let tmp1: Item[] = items.items;
-        promos = tmp1.filter((item: Item) => Number(item.promo) !== 0);
-        this.itemsInPromotions.next(promos);
-        resolve(promos);
-      },
-      error => reject(error)
-      )
-    });
-  }
-
-  getBestSellingItems (): Promise<Item[]> {
-    return new Promise((resolve, reject) => {
-      let bestSaled: Item[] = [];
-      this.itemsToDisplay.subscribe((items: any) => {
-        let tmp2: Item[] = items.items;
-        bestSaled = tmp2.sort((a: Item, b: Item) => b.totalSell - a.totalSell);
-        bestSaled = bestSaled.slice(0, 10);
-        this.bestItemsSold.next(bestSaled);
-        resolve(bestSaled);
-      },
-      error => reject(error)
-      );
-    });
-  }
+  // getBestSellingItems (): Promise<Item[]> {
+  //   return new Promise((resolve, reject) => {
+  //     let bestSaled: Item[] = [];
+  //     this.itemsToDisplay.subscribe((items: any) => {
+  //       let tmp2: Item[] = items;
+  //       bestSaled = tmp2.sort((a: Item, b: Item) => b.totalSell - a.totalSell);
+  //       bestSaled = bestSaled.slice(0, 10);
+  //       this.bestItemsSold.next(bestSaled);
+  //       resolve(bestSaled);
+  //     },
+  //     error => reject(error)
+  //     );
+  //   });
+  // }
 
   // getData(queryUrl: string,para:any={}) {
   //   let getUrl: string = this.baseUrl + queryUrl;
