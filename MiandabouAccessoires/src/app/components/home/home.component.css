@@ -10,7 +10,7 @@
 
 .slider-wrapper .card-list .card-item {
   width: 95vw;
-  height: 94vh;
+  height: 90vh;
   display: flex;
 }
 
@@ -41,9 +41,17 @@
   height: 100%;
 }
 
+.slider-scrollbar {
+  height: 1rem;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .slider-scrollbar .scrollbar-track {
   height: 2px;
-  width: 100%;
+  width: 90%;
   background: #ccc;
   position: relative;
   border-radius: 4px;
@@ -56,7 +64,7 @@
 .slider-scrollbar .scrollbar-thumb {
   position: absolute;
   height: 100%;
-  width: 50%;
+  width: 45%;
   background: #000;
   border-radius: inherit;
   cursor: grab;

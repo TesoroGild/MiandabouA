@@ -290,4 +290,8 @@ export class HomeComponent {
     return `${environment.backendUrl}/images/itemPic/${contenthash}`
   }
 
+  nextSlide () {}
+
+  previousSlide () {}
+
 }
