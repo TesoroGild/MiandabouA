@@ -1,24 +1,16 @@
+import '@splidejs/splide/css/skyblue';
+
 import { Component } from '@angular/core';
 import { Item } from '../../interfaces/item.interface';
-import Splide from '@splidejs/splide';
 import { Blog } from '../../interfaces/blog.interface';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
-// Default theme
-import '@splidejs/splide/css';
-
-// or other themes
-import '@splidejs/splide/css/skyblue';
-import '@splidejs/splide/css/sea-green';
-
-// or only core styles
-import '@splidejs/splide/css/core';
 import { EmailService } from '../../services/email/email.service';
 import { ItemService } from '../../services/item/item.service';
 import { environment } from '../../../environments/dev.environment';
 import { Subscription } from 'rxjs';
+import { Splide } from '@splidejs/splide';
 
 @Component({
   selector: 'app-home',
@@ -27,9 +19,6 @@ import { Subscription } from 'rxjs';
 })
 export class HomeComponent {
 
-  //items$ = this.itemService.getPromoItems();
-  //itemSubscription: Subscription;
-  //items: Item[] = [];
   promos$ = this.itemService.getPromoItems();
   promosSubscription: Subscription;
   promos: Item[] = [];
@@ -142,9 +131,10 @@ export class HomeComponent {
   });
 
   constructor(
+    private snackBar: MatSnackBar,
     private router: Router, 
     private formBuilder: FormBuilder,
-    private mailService: EmailService,
+    private emailService: EmailService,
     private itemService: ItemService
   ) {
     this.promosSubscription = this.promos$.subscribe((p) => {
@@ -157,9 +147,6 @@ export class HomeComponent {
 
   ngOnInit (): void {
     this.getItems();
-    //this.getPromos();
-    //this.getBestSelling();
-    //a supprimer
     this.blogs = this.test2;
   }
 
@@ -172,76 +159,56 @@ export class HomeComponent {
     }
   }
 
-  ngAfterViewInit() {
-    this.promos$.subscribe((p) => {
-      if (p.length !== 0) {
-        console.log("PROMO SLIDER INITIALIZED");
-        new Splide('#promoSplide', {
-          type: 'loop',
-          perPage: 1,
-          autoplay: true,
-          duration: 2000,
-          pagination: false,
-          speed: 1000
-        }).mount();
-      }
-    });
-    
-    this.bestSelling$.subscribe((b) => {
-    if (b.length !== 0) {
-      console.log("BEST SELLING SLIDER INITIALIZED");
-      new Splide(`#bestSellingSplide`, {
-        type: 'loop',
-        perPage: 4,
-        autoplay: true,
-        duration: 3000,
-        pagination: false,
-        speed: 1000,
-        perMove: 1,
-        //fixedWidth : '20vw'
-      }).mount();
-    }
-    });
-  }
+  // ngAfterViewInit() {
+  //   this.promos$.subscribe((p) => {
+  //     if (p.length !== 0) {
+  //       console.log("PROMO SLIDER INITIALIZED");
+  //       new Splide('#promoSplide', {
+  //         type: 'loop',
+  //         perPage: 1,
+  //         autoplay: true,
+  //         duration: 2000,
+  //         pagination: false,
+  //         speed: 1000
+  //       }).mount();
+  //     }
+  //   });
+
+  //   this.bestSelling$.subscribe((b) => {
+  //     if (b.length !== 0) {
+  //       console.log("BEST SELLING SLIDER INITIALIZED");
+  //       new Splide(`#bestSellingSplide`, {
+  //         type: 'loop',
+  //         perPage: 4,
+  //         autoplay: true,
+  //         duration: 3000,
+  //         pagination: false,
+  //         speed: 1000,
+  //         perMove: 1,
+  //         snap: true,
+  //         breakpoints: {
+  //           1200: {
+  //             perPage: 3
+  //           },
+  //           768: {
+  //             perPage: 2
+  //           },
+  //           640: {
+  //             perPage: 1
+  //           }
+  //         }
+  //       }).mount();
+  //     }
+  //   });
+  // }
 
   getItems () {
     this.itemService.getItems();
   }
 
-  // getPromos () {
-  //    = this.itemService.getPromoItems();
-  // }
-  // getPromos () {
-  //   //console.log(this.items)
-  //   //this.promos = this.itemService.getPromoItems();
-  //   //FAIRE TOUS LES SUBSCRIBE DABS LE ITEM SERVICE
-  //   this.itemService.getItemsToDisplay().subscribe(items => {
-  //     if (items.length !== 0) {
-  //       this.promos = items.filter((item: Item) => Number(item.promo) !== 0);
-  //       this.slidePromos();
-  //     }
-  //   })
-  // }
-
   isPromoNotEmpty() {
     return this.promos.length !== 0;
   }
-
-  // getBestSelling () {
-  //    = this.itemService.getBestSellingItems();
-  // }
-  // async getBestSelling () {
-  //   //this.bestSelling = await this.itemService.getBestSellingItems();
-  //   //console.log(this.items)
-  //   //this.bestSelling = await this.itemService.getBestSellingItems()
-  //   this.itemService.getItemsToDisplay().subscribe(items => {
-  //     if (items.length !== 0) {
-  //       this.bestSelling = items.sort((a: Item, b: Item) => b.totalSell - a.totalSell);
-  //       this.bestSelling = this.bestSelling.slice(0, 10);
-  //       this.sliderBestSelling();
-  //     }
-  //   })
-  // }
 
   isBestSellingNotEmpty(){
     return this.bestSelling.length !== 0;
@@ -260,8 +227,39 @@ export class HomeComponent {
     this.router.navigate(['/blog']);
   }
 
-  enableAlerts () {
+  itemsPage () {
+    this.router.navigate(['/items']);
+  }
 
+  subscribeNewsLetter () {
+    console.log("ENABLE ALERTS");
+    let emailValue = this.alertForm.get("email")?.value;
+    const mailToAlert = new FormData();
+    mailToAlert.append("email", this.alertForm.get("email")?.value);
+      
+    if (emailValue != null && emailValue != "") {
+      this.emailService.addEmail(mailToAlert).subscribe((mailAdded: any) => {
+        //
+        console.log(mailAdded.mail);
+        if (mailAdded.mail != null && mailAdded.mail != undefined) {
+          this.emailService.sendEmail(mailAdded.mail);
+          this.snackBar.open("Mail ajouté!", "", {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom',
+            panelClass: 'success'
+          });
+          this.alertForm.reset();
+        } else {
+          this.snackBar.open(mailAdded.msg, "", {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom',
+            panelClass: 'fail'
+          });
+        }
+      });
+    } else this.alertForm.markAllAsTouched();
   }
 
   //email
@@ -286,35 +284,6 @@ export class HomeComponent {
       this.alertForm.controls[field].hasError(error) &&
       (this.alertForm.controls[field].dirty || this.alertForm.controls[field].touched)
     );
-  }
-
-  subscribeNewsLetter () {
-    console.log("HOME: NEWSLETTER SUBCRIPTION");
-      let emailValue = this.alertForm.get("email")?.value;
-      const newsLetterSubscription = new FormData();
-      newsLetterSubscription.append("email", this.alertForm.get("email")?.value);
-
-      if (emailValue != null) {
-        /*this.mailService.subscribeNewsLetter(newsLetterSubscription).subscribe((subscriptionResponse: any) => {
-          console.log(subscriptionResponse);
-          if (subscriptionResponse != null && subscriptionResponse != "") {
-            this.snackBar.open("Inscription reussie!", "", {
-              duration: 3000,
-              horizontalPosition: 'center',
-              verticalPosition: 'bottom',
-              panelClass: 'success'
-            });
-            this.alertForm.reset();
-          } else {
-            this.snackBar.open(subscriptionResponse.msg, "", {
-              duration: 3000,
-              horizontalPosition: 'center',
-              verticalPosition: 'bottom',
-              panelClass: 'fail'
-            });
-          }
-        });*/
-      } else this.alertForm.markAllAsTouched();
   }
 
   picture (contenthash: string) {
