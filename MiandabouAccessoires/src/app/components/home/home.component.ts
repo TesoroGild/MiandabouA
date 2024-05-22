@@ -1,6 +1,4 @@
-import '@splidejs/splide/css/skyblue';
-
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { Item } from '../../interfaces/item.interface';
 import { Blog } from '../../interfaces/blog.interface';
 import { Router } from '@angular/router';
@@ -10,7 +8,6 @@ import { EmailService } from '../../services/email/email.service';
 import { ItemService } from '../../services/item/item.service';
 import { environment } from '../../../environments/dev.environment';
 import { Subscription } from 'rxjs';
-import { Splide } from '@splidejs/splide';
 
 @Component({
   selector: 'app-home',
@@ -19,6 +16,10 @@ import { Splide } from '@splidejs/splide';
 })
 export class HomeComponent {
 
+  //@ViewChild('carousel', { static: true }) carousel!: ElementRef;
+  //@ViewChild('carousel') carousel!: ElementRef<HTMLButtonElement>;
+  @ViewChild('carousel', { read: ElementRef }) public carousel!: ElementRef<any>;
+
   promos$ = this.itemService.getPromoItems();
   promosSubscription: Subscription;
   promos: Item[] = [];
@@ -26,6 +27,7 @@ export class HomeComponent {
   bestSellingSubscription: Subscription;
   bestSelling: Item[] = [];
   blogs: any[] = [];
+  //cardList:any;
 
   testPromos: Item[] = [
     {
@@ -290,8 +292,35 @@ export class HomeComponent {
     return `${environment.backendUrl}/images/itemPic/${contenthash}`
   }
 
-  nextSlide () {}
+  previousSlide () {
+    if (this.carousel)
+      this.carousel.nativeElement.scrollBy({ left: -window.innerWidth * 0.95, behavior: 'smooth' });
+    //const scrollW = 0;
+    //console.log(-window.innerWidth * 0.95);
+    this.updateScrollThumbPosition(-window.innerWidth);
+  }
 
-  previousSlide () {}
+  nextSlide () {
+    if (this.carousel)
+      this.carousel.nativeElement.scrollBy({ left: window.innerWidth * 0.95, behavior: 'smooth' });
+    //const scrollW = 0;
+    //console.log(window.innerWidth * 0.95);
+    this.updateScrollThumbPosition(window.innerWidth);
+  }
+
+  // scrollBar () {
+  //   this.cardList = document.querySelector('.card-list');
+  //   console.log(this.cardList);
+  //   const maxScrollLeft = this.cardList!.scrollWidth - this.cardList!.clientWidth;
+  // }
+
+  updateScrollThumbPosition (scrollW: number) {
+    const cardList = document.querySelector('.card-list');
+    const sliderScrollBar = document.querySelector('.slider-scrollbar');
+    const scrollBarThumb = sliderScrollBar?.querySelector('.scrollbar-thumb') as HTMLElement;
+    const maxScrollLeft = cardList!.scrollWidth - cardList!.clientWidth;
+    const thumbPosition = (scrollW / maxScrollLeft) * (sliderScrollBar!.clientWidth - scrollBarThumb!.offsetWidth);
+    scrollBarThumb!.style.left = `${thumbPosition}px`;
+  }
 
 }

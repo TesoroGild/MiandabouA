@@ -35,16 +35,16 @@
     </div>
 
     <!-- PROMO -->
-    <div class="mt-8 h-screen overflow-x-auto">
+    <div #carousel class="mt-8 h-screen relative overflow-x-auto" style="scrollbar-width: none;">
+        <button (click)="previousSlide()" id="prev-slide" class="slide-button">
+            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
+                height="24" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="m15 19-7-7 7-7" />
+            </svg>
+        </button>
         <ng-container *ngIf="promos$ | async as promos; else promoEmpty">
             <div class="slider-wrapper">
-                <button (click)="previousSlide()" id="prev-slide" class="slide-button">
-                    <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
-                        height="24" fill="none" viewBox="0 0 24 24">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="m15 19-7-7 7-7" />
-                    </svg>
-                </button>
                 <div class="w-full h-[90vh] card-list">
                     <div class="card-item" *ngFor="let item of promos">
                         <div class="w-1/2 flex-wrap pl-12">
@@ -80,19 +80,19 @@
                         </div>
                     </div>
                 </div>
-                <button (click)="nextSlide()" id="next-slide" class="slide-button">
-                    <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
-                        height="24" fill="none" viewBox="0 0 24 24">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7" />
-                    </svg>
-                </button>
-                <div class="slider-scrollbar">
-                    <div class="scrollbar-track">
-                        <div class="scrollbar-thumb"></div>
-                    </div>
-                </div>
             </div>
         </ng-container>
+        <div class="slider-scrollbar">
+            <div class="scrollbar-track">
+                <div class="scrollbar-thumb"></div>
+            </div>
+        </div>
+        <button (click)="nextSlide()" id="next-slide" class="slide-button">
+            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
+                height="24" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7" />
+            </svg>
+        </button>
         <ng-template #promoEmpty>
             <!-- No Promo -->
             <div class="w-full p-4 ">
