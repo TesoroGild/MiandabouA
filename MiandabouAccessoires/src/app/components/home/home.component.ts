@@ -19,6 +19,8 @@ export class HomeComponent {
   //@ViewChild('carousel', { static: true }) carousel!: ElementRef;
   //@ViewChild('carousel') carousel!: ElementRef<HTMLButtonElement>;
   @ViewChild('carousel', { read: ElementRef }) public carousel!: ElementRef<any>;
+  @ViewChild('scrollbarThumb', { static: false }) public scrollbarThumb!: ElementRef<any>;
+  @ViewChild('scrollbarTrack', { static: false }) public scrollbarTrack!: ElementRef<any>;
 
   promos$ = this.itemService.getPromoItems();
   promosSubscription: Subscription;
@@ -165,7 +167,8 @@ export class HomeComponent {
 
   ngAfterViewInit() {
     setTimeout(() => {
-        this.displaySlideButton()
+        this.displaySlideButton();
+        this.updateScrollThumbSize();
         //this.updateScrollThumbPosition();
       }, 1000);
     this.carousel.nativeElement.addEventListener('scroll', this.updateScrollThumbPosition.bind(this));
@@ -264,10 +267,10 @@ export class HomeComponent {
     const buttons = Array.from(document.getElementsByClassName('slide-button') as HTMLCollectionOf<HTMLElement>);
     if (buttons.length < 2) return;
 
-    if (this.promos.length < 2) {console.log("AAAAAAAAAAAAAA")
+    if (this.promos.length < 2) {
       buttons[0].style.display = 'none';
       buttons[1].style.display = 'none';
-    } else {console.log("BBBBBBBBBB")
+    } else {
       const maxScrollLeft = this.cardList!.scrollWidth - this.cardList!.clientWidth;
       buttons[0].style.display = this.cardList!.scrollLeft <= 0 ? 'none' : 'block';
       buttons[1].style.display = this.cardList!.scrollLeft >= maxScrollLeft ? 'none' : 'block';
@@ -275,32 +278,24 @@ export class HomeComponent {
   }
 
   previousSlide () {
-    console.log("PREV SLIDE")
-    if (this.carousel) {
+    if (this.carousel)
       this.carousel.nativeElement.scrollBy({ left: -window.innerWidth * 0.95, behavior: 'smooth' });
-      // setTimeout(() => {
-      //   this.displaySlideButton()
-      //   //this.updateScrollThumbPosition();
-      // }, 300);
-    }
-    //this.displaySlideButton()
-    //this.updateScrollThumbPosition();
   }
 
   nextSlide () {
-    if (this.carousel) {
+    if (this.carousel)
       this.cardList!.scrollBy({ left: window.innerWidth * 0.95, behavior: 'smooth' });
-      // setTimeout(() => {
-      //   this.displaySlideButton()
-      //   //this.updateScrollThumbPosition();
-      // }, 300);
-    }
-    // this.displaySlideButton()
-    // this.updateScrollThumbPosition();
+  }
+
+  updateScrollThumbSize() {
+    const itemCount = this.promos.length;
+    //const trackWidth = this.scrollbarTrack.nativeElement.offsetWidth;
+    const thumbWidth = (100 / itemCount); //((trackWidth * 0.10) / itemCount)
+    this.scrollbarThumb.nativeElement.style.width = `${thumbWidth}%`;
+    this.updateScrollThumbPosition();
   }
 
   updateScrollThumbPosition () {
-    //const cardList = document.querySelector('.test');
     const sliderScrollBar = document.querySelector('.slider-scrollbar');
     const scrollBarThumb = sliderScrollBar?.querySelector('.scrollbar-thumb') as HTMLElement;
     
@@ -310,8 +305,7 @@ export class HomeComponent {
 
     const maxScrollLeft = this.cardList!.scrollWidth - this.cardList!.clientWidth;
     const scrollPosition = this.cardList!.scrollLeft;
-    const thumbPosition = ((scrollPosition) / maxScrollLeft) * (sliderScrollBar!.clientWidth - scrollBarThumb!.offsetWidth);
-    console.log('('+scrollPosition+'/'+maxScrollLeft+') * ('+sliderScrollBar!.clientWidth+'-'+scrollBarThumb!.offsetWidth+')');
+    const thumbPosition = (scrollPosition / maxScrollLeft) * (sliderScrollBar!.clientWidth - scrollBarThumb!.offsetWidth) * 0.95;
     scrollBarThumb!.style.left = `${thumbPosition}px`;
   }
 

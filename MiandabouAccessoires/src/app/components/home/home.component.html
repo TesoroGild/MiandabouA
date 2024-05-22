@@ -97,8 +97,8 @@
             </ng-template>
         </div>
         <div class="slider-scrollbar">
-            <div class="scrollbar-track">
-                <div class="scrollbar-thumb"></div>
+            <div class="scrollbar-track" #scrollbarTrack>
+                <div class="scrollbar-thumb" #scrollbarThumb></div>
             </div>
         </div>
         <button (click)="nextSlide()" id="next-slide" class="slide-button">

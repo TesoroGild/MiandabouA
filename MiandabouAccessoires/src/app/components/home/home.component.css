@@ -37,6 +37,9 @@
   height: 100%;
 }
 
+/*********************************/
+/*       Slider Scrollbar        */
+/*********************************/
 .slider-scrollbar {
   height: 1rem;
   width: 100%;
@@ -47,20 +50,20 @@
 
 .slider-scrollbar .scrollbar-track {
   height: 2px;
-  width: 90%;
+  width: 95%;
+  /* Set to 95% of the parent div */
   background: #ccc;
   position: relative;
   border-radius: 4px;
-}
-
-.slider-scrollbar:hover .scrollbar-track {
-  height: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .slider-scrollbar .scrollbar-thumb {
   position: absolute;
   height: 100%;
-  width: 45%;
+  /* Initial width, this will be updated dynamically */
   background: #000;
   border-radius: inherit;
   cursor: grab;
@@ -80,3 +83,8 @@
   bottom: -10px;
   content: "";
 }
+
+.slider-scrollbar:hover .scrollbar-track {
+  height: 4px;
+}
+/*********************************/
