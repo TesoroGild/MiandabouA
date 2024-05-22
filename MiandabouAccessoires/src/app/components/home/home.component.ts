@@ -27,7 +27,8 @@ export class HomeComponent {
   bestSellingSubscription: Subscription;
   bestSelling: Item[] = [];
   blogs: any[] = [];
-  //cardList:any;
+  
+  cardList:any;
 
   testPromos: Item[] = [
     {
@@ -141,6 +142,7 @@ export class HomeComponent {
   ) {
     this.promosSubscription = this.promos$.subscribe((p) => {
       this.promos = p;
+      this.cardList = document.querySelector('.test');
     });
     this.bestSellingSubscription = this.bestSelling$.subscribe((b) => {
       this.bestSelling = b;
@@ -161,48 +163,14 @@ export class HomeComponent {
     }
   }
 
-  // ngAfterViewInit() {
-  //   this.promos$.subscribe((p) => {
-  //     if (p.length !== 0) {
-  //       console.log("PROMO SLIDER INITIALIZED");
-  //       new Splide('#promoSplide', {
-  //         type: 'loop',
-  //         perPage: 1,
-  //         autoplay: true,
-  //         duration: 2000,
-  //         pagination: false,
-  //         speed: 1000
-  //       }).mount();
-  //     }
-  //   });
-
-  //   this.bestSelling$.subscribe((b) => {
-  //     if (b.length !== 0) {
-  //       console.log("BEST SELLING SLIDER INITIALIZED");
-  //       new Splide(`#bestSellingSplide`, {
-  //         type: 'loop',
-  //         perPage: 4,
-  //         autoplay: true,
-  //         duration: 3000,
-  //         pagination: false,
-  //         speed: 1000,
-  //         perMove: 1,
-  //         snap: true,
-  //         breakpoints: {
-  //           1200: {
-  //             perPage: 3
-  //           },
-  //           768: {
-  //             perPage: 2
-  //           },
-  //           640: {
-  //             perPage: 1
-  //           }
-  //         }
-  //       }).mount();
-  //     }
-  //   });
-  // }
+  ngAfterViewInit() {
+    setTimeout(() => {
+        this.displaySlideButton()
+        //this.updateScrollThumbPosition();
+      }, 1000);
+    this.carousel.nativeElement.addEventListener('scroll', this.updateScrollThumbPosition.bind(this));
+    this.carousel.nativeElement.addEventListener('scroll', this.displaySlideButton.bind(this));
+  }
 
   getItems () {
     this.itemService.getItems();
@@ -230,7 +198,7 @@ export class HomeComponent {
   }
 
   itemsPage () {
-    this.router.navigate(['/items']);
+    this.router.navigate(['/item']);
   }
 
   subscribeNewsLetter () {
@@ -292,34 +260,58 @@ export class HomeComponent {
     return `${environment.backendUrl}/images/itemPic/${contenthash}`
   }
 
+  displaySlideButton () {
+    const buttons = Array.from(document.getElementsByClassName('slide-button') as HTMLCollectionOf<HTMLElement>);
+    if (buttons.length < 2) return;
+
+    if (this.promos.length < 2) {console.log("AAAAAAAAAAAAAA")
+      buttons[0].style.display = 'none';
+      buttons[1].style.display = 'none';
+    } else {console.log("BBBBBBBBBB")
+      const maxScrollLeft = this.cardList!.scrollWidth - this.cardList!.clientWidth;
+      buttons[0].style.display = this.cardList!.scrollLeft <= 0 ? 'none' : 'block';
+      buttons[1].style.display = this.cardList!.scrollLeft >= maxScrollLeft ? 'none' : 'block';
+    }
+  }
+
   previousSlide () {
-    if (this.carousel)
+    console.log("PREV SLIDE")
+    if (this.carousel) {
       this.carousel.nativeElement.scrollBy({ left: -window.innerWidth * 0.95, behavior: 'smooth' });
-    //const scrollW = 0;
-    //console.log(-window.innerWidth * 0.95);
-    this.updateScrollThumbPosition(-window.innerWidth);
+      // setTimeout(() => {
+      //   this.displaySlideButton()
+      //   //this.updateScrollThumbPosition();
+      // }, 300);
+    }
+    //this.displaySlideButton()
+    //this.updateScrollThumbPosition();
   }
 
   nextSlide () {
-    if (this.carousel)
-      this.carousel.nativeElement.scrollBy({ left: window.innerWidth * 0.95, behavior: 'smooth' });
-    //const scrollW = 0;
-    //console.log(window.innerWidth * 0.95);
-    this.updateScrollThumbPosition(window.innerWidth);
+    if (this.carousel) {
+      this.cardList!.scrollBy({ left: window.innerWidth * 0.95, behavior: 'smooth' });
+      // setTimeout(() => {
+      //   this.displaySlideButton()
+      //   //this.updateScrollThumbPosition();
+      // }, 300);
+    }
+    // this.displaySlideButton()
+    // this.updateScrollThumbPosition();
   }
 
-  // scrollBar () {
-  //   this.cardList = document.querySelector('.card-list');
-  //   console.log(this.cardList);
-  //   const maxScrollLeft = this.cardList!.scrollWidth - this.cardList!.clientWidth;
-  // }
-
-  updateScrollThumbPosition (scrollW: number) {
-    const cardList = document.querySelector('.card-list');
+  updateScrollThumbPosition () {
+    //const cardList = document.querySelector('.test');
     const sliderScrollBar = document.querySelector('.slider-scrollbar');
     const scrollBarThumb = sliderScrollBar?.querySelector('.scrollbar-thumb') as HTMLElement;
-    const maxScrollLeft = cardList!.scrollWidth - cardList!.clientWidth;
-    const thumbPosition = (scrollW / maxScrollLeft) * (sliderScrollBar!.clientWidth - scrollBarThumb!.offsetWidth);
+    
+    if (!sliderScrollBar || !scrollBarThumb) {
+      return; // Exit if elements are not found
+    }
+
+    const maxScrollLeft = this.cardList!.scrollWidth - this.cardList!.clientWidth;
+    const scrollPosition = this.cardList!.scrollLeft;
+    const thumbPosition = ((scrollPosition) / maxScrollLeft) * (sliderScrollBar!.clientWidth - scrollBarThumb!.offsetWidth);
+    console.log('('+scrollPosition+'/'+maxScrollLeft+') * ('+sliderScrollBar!.clientWidth+'-'+scrollBarThumb!.offsetWidth+')');
     scrollBarThumb!.style.left = `${thumbPosition}px`;
   }
 
