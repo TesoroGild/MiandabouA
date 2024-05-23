@@ -16,11 +16,13 @@ import { Subscription } from 'rxjs';
 })
 export class HomeComponent {
 
-  //@ViewChild('carousel', { static: true }) carousel!: ElementRef;
-  //@ViewChild('carousel') carousel!: ElementRef<HTMLButtonElement>;
-  @ViewChild('carousel', { read: ElementRef }) public carousel!: ElementRef<any>;
-  @ViewChild('scrollbarThumb', { static: false }) public scrollbarThumb!: ElementRef<any>;
-  @ViewChild('scrollbarTrack', { static: false }) public scrollbarTrack!: ElementRef<any>;
+  @ViewChild('promosCarousel', { read: ElementRef }) public promosCarousel!: ElementRef<any>;
+  @ViewChild('promosScrollbarThumb', { static: false }) public promosScrollbarThumb!: ElementRef<any>;
+  @ViewChild('promosScrollbarTrack', { static: false }) public promosScrollbarTrack!: ElementRef<any>;
+
+  @ViewChild('bestSellingsCarousel', { read: ElementRef }) public bestSellingsCarousel!: ElementRef<any>;
+  //@ViewChild('bsScrollbarThumb', { static: false }) public bsScrollbarThumb!: ElementRef<any>;
+  //@ViewChild('bsScrollbarTrack', { static: false }) public bsScrollbarTrack!: ElementRef<any>;
 
   promos$ = this.itemService.getPromoItems();
   promosSubscription: Subscription;
@@ -30,7 +32,8 @@ export class HomeComponent {
   bestSelling: Item[] = [];
   blogs: any[] = [];
   
-  cardList:any;
+  promosCardList:any;
+  bsCardList:any;
 
   testPromos: Item[] = [
     {
@@ -144,10 +147,11 @@ export class HomeComponent {
   ) {
     this.promosSubscription = this.promos$.subscribe((p) => {
       this.promos = p;
-      this.cardList = document.querySelector('.test');
+      this.promosCardList = document.querySelector('.promosCardList');
     });
     this.bestSellingSubscription = this.bestSelling$.subscribe((b) => {
       this.bestSelling = b;
+      this.bsCardList = document.querySelector('.bsCardList');
     });
   }
 
@@ -167,12 +171,13 @@ export class HomeComponent {
 
   ngAfterViewInit() {
     setTimeout(() => {
-        this.displaySlideButton();
-        this.updateScrollThumbSize();
-        //this.updateScrollThumbPosition();
-      }, 1000);
-    this.carousel.nativeElement.addEventListener('scroll', this.updateScrollThumbPosition.bind(this));
-    this.carousel.nativeElement.addEventListener('scroll', this.displaySlideButton.bind(this));
+      this.displayPromosSlideButton();
+      this.displayBSSlideButton();
+      this.updateScrollThumbSize();
+    }, 1000);
+    this.promosCarousel.nativeElement.addEventListener('scroll', this.updateScrollThumbPosition.bind(this));
+    this.promosCarousel.nativeElement.addEventListener('scroll', this.displayPromosSlideButton.bind(this));
+    this.bestSellingsCarousel.nativeElement.addEventListener('scroll', this.displayBSSlideButton.bind(this));
   }
 
   getItems () {
@@ -263,50 +268,73 @@ export class HomeComponent {
     return `${environment.backendUrl}/images/itemPic/${contenthash}`
   }
 
-  displaySlideButton () {
-    const buttons = Array.from(document.getElementsByClassName('slide-button') as HTMLCollectionOf<HTMLElement>);
-    if (buttons.length < 2) return;
+  displayPromosSlideButton () {
+    const promosButtons = Array.from(document.getElementsByClassName('promos-slide-button') as HTMLCollectionOf<HTMLElement>);
+    if (promosButtons.length < 2) return;
 
     if (this.promos.length < 2) {
-      buttons[0].style.display = 'none';
-      buttons[1].style.display = 'none';
+      promosButtons[0].style.display = 'none';
+      promosButtons[1].style.display = 'none';
     } else {
-      const maxScrollLeft = this.cardList!.scrollWidth - this.cardList!.clientWidth;
-      buttons[0].style.display = this.cardList!.scrollLeft <= 0 ? 'none' : 'block';
-      buttons[1].style.display = this.cardList!.scrollLeft >= maxScrollLeft ? 'none' : 'block';
+      const maxScrollLeft = this.promosCardList!.scrollWidth - this.promosCardList!.clientWidth;
+      promosButtons[0].style.display = this.promosCardList!.scrollLeft <= 0 ? 'none' : 'block';
+      promosButtons[1].style.display = this.promosCardList!.scrollLeft >= maxScrollLeft ? 'none' : 'block';
     }
   }
 
-  previousSlide () {
-    if (this.carousel)
-      this.carousel.nativeElement.scrollBy({ left: -window.innerWidth * 0.95, behavior: 'smooth' });
+  displayBSSlideButton () {
+    const bsButtons = Array.from(document.getElementsByClassName('bs-slide-button') as HTMLCollectionOf<HTMLElement>);
+    if (bsButtons.length < 2) return;
+
+    if (this.bestSelling.length < 2) {
+      bsButtons[0].style.display = 'none';
+      bsButtons[1].style.display = 'none';
+    } else {
+      const maxScrollLeft = this.bsCardList!.scrollWidth - this.bsCardList!.clientWidth;
+      bsButtons[0].style.display = this.bsCardList!.scrollLeft <= 0 ? 'none' : 'block';
+      bsButtons[1].style.display = this.bsCardList!.scrollLeft >= maxScrollLeft ? 'none' : 'block';
+    }
   }
 
-  nextSlide () {
-    if (this.carousel)
-      this.cardList!.scrollBy({ left: window.innerWidth * 0.95, behavior: 'smooth' });
+  previousPromosSlide () {
+    if (this.promosCarousel)
+      this.promosCarousel.nativeElement.scrollBy({ left: -window.innerWidth * 0.95, behavior: 'smooth' });
+  }
+
+  previousBSSlide () {
+    if (this.bestSellingsCarousel)
+      this.bestSellingsCarousel.nativeElement.scrollBy({ left: -window.innerWidth * 0.25, behavior: 'smooth' });
+  }
+
+  nextPromosSlide () {
+    if (this.promosCarousel)
+      this.promosCardList!.scrollBy({ left: window.innerWidth * 0.95, behavior: 'smooth' });
+  }
+
+  nextBSSlide () {
+    if (this.promosCarousel)
+      this.bsCardList!.scrollBy({ left: window.innerWidth * 0.25, behavior: 'smooth' });
   }
 
   updateScrollThumbSize() {
     const itemCount = this.promos.length;
-    //const trackWidth = this.scrollbarTrack.nativeElement.offsetWidth;
     const thumbWidth = (100 / itemCount); //((trackWidth * 0.10) / itemCount)
-    this.scrollbarThumb.nativeElement.style.width = `${thumbWidth}%`;
+    this.promosScrollbarThumb.nativeElement.style.width = `${thumbWidth}%`;
     this.updateScrollThumbPosition();
   }
 
   updateScrollThumbPosition () {
-    const sliderScrollBar = document.querySelector('.slider-scrollbar');
-    const scrollBarThumb = sliderScrollBar?.querySelector('.scrollbar-thumb') as HTMLElement;
+    const promosSliderScrollBar = document.querySelector('.promos-slider-scrollbar');
+    const promosScrollBarThumb = promosSliderScrollBar?.querySelector('.promos-scrollbar-thumb') as HTMLElement;
     
-    if (!sliderScrollBar || !scrollBarThumb) {
+    if (!promosSliderScrollBar || !promosScrollBarThumb) {
       return; // Exit if elements are not found
     }
 
-    const maxScrollLeft = this.cardList!.scrollWidth - this.cardList!.clientWidth;
-    const scrollPosition = this.cardList!.scrollLeft;
-    const thumbPosition = (scrollPosition / maxScrollLeft) * (sliderScrollBar!.clientWidth - scrollBarThumb!.offsetWidth) * 0.95;
-    scrollBarThumb!.style.left = `${thumbPosition}px`;
+    const maxScrollLeft = this.promosCardList!.scrollWidth - this.promosCardList!.clientWidth;
+    const scrollPosition = this.promosCardList!.scrollLeft;
+    const thumbPosition = (scrollPosition / maxScrollLeft) * (promosSliderScrollBar!.clientWidth - promosScrollBarThumb!.offsetWidth) * 0.95;
+    promosScrollBarThumb!.style.left = `${thumbPosition}px`;
   }
 
 }

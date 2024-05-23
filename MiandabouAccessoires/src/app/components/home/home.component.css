@@ -1,16 +1,19 @@
-.slider-wrapper .card-list {
+/*********************************/
+/*       PROMOS SLIDER           */
+/*********************************/
+.promos-slider-wrapper .card-list {
   display: grid;
   gap: 10px;
   grid-template-columns: repeat(20, 1fr);
 }
 
-.slider-wrapper .card-list .card-item {
+.promos-slider-wrapper .card-list .card-item {
   width: 95vw;
-  height: 99vh;
+  height: 95vh;
   display: flex;
 }
 
-.slide-button {
+.promos-slide-button {
   position: absolute;
   height: 50px;
   width: 50px;
@@ -23,15 +26,15 @@
   z-index: 10;
 }
 
-.slide-button#prev-slide {
+.promos-slide-button#prev-promos-slide {
   left: 0px;
 }
 
-.slide-button#next-slide {
+.promos-slide-button#next-promos-slide {
   right: 0px;
 }
 
-.slider-wrapper {
+.promos-slider-wrapper {
   position: relative;
   width: 100%;
   height: 100%;
@@ -40,7 +43,7 @@
 /*********************************/
 /*       Slider Scrollbar        */
 /*********************************/
-.slider-scrollbar {
+.promos-slider-scrollbar {
   height: 1rem;
   width: 100%;
   display: flex;
@@ -48,7 +51,7 @@
   justify-content: center;
 }
 
-.slider-scrollbar .scrollbar-track {
+.promos-slider-scrollbar .promos-scrollbar-track {
   height: 2px;
   width: 95%;
   /* Set to 95% of the parent div */
@@ -60,7 +63,7 @@
   justify-content: center;
 }
 
-.slider-scrollbar .scrollbar-thumb {
+.promos-slider-scrollbar .promos-scrollbar-thumb {
   position: absolute;
   height: 100%;
   /* Initial width, this will be updated dynamically */
@@ -69,13 +72,13 @@
   cursor: grab;
 }
 
-.slider-scrollbar .scrollbar-thumb:active {
+.promos-slider-scrollbar .promos-scrollbar-thumb:active {
   cursor: grabbing;
   height: 6px;
   top: -2px;
 }
 
-.slider-scrollbar .scrollbar-thumb::after {
+.promos-slider-scrollbar .promos-scrollbar-thumb::after {
   position: absolute;
   left: 0;
   right: 0;
@@ -84,7 +87,52 @@
   content: "";
 }
 
-.slider-scrollbar:hover .scrollbar-track {
+.promos-slider-scrollbar:hover .promos-scrollbar-track {
   height: 4px;
 }
+/*********************************/
+/*********************************/
+
+/*********************************/
+/*     BEST SELLINGS SLIDER      */
+/*********************************/
+.bs-slider-wrapper .bs-card-list {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(10, 1fr);
+}
+
+.bs-slider-wrapper .bs-card-list .bs-card-item {
+  width: 24vw;
+  height: 85vh;
+  display: flex;
+}
+
+.bs-slide-button {
+  position: absolute;
+  height: 50px;
+  width: 50px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  border-radius: 50%;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+}
+
+.bs-slide-button#prev-bs-slide {
+  left: 0px;
+}
+
+.bs-slide-button#next-bs-slide {
+  right: 0px;
+}
+
+.bs-slider-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+/*********************************/
 /*********************************/
