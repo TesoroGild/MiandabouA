@@ -62,4 +62,19 @@ export class CartService {
     this.cart = this.cart.filter(item => item.item.id !== itemToDelete.id);
     this.itemsCartSubject.next(this.cart);
   }
+
+  updateQuantity(itemToModify: Item, qte: number) {
+    console.log(qte);
+    const index = this.cart.findIndex(item => item.item.id === itemToModify.id);
+    if (index !== -1) {
+      if (qte > 0) {
+        this.cart[index].quantityBuy = qte;
+      } else if (qte <= 0) {
+        this.deleteFromCart(itemToModify);
+      } else {
+        this.cart[index].quantityBuy = 0;
+      }
+      this.itemsCartSubject.next(this.cart);
+    }
+  }
 }

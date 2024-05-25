@@ -48,8 +48,16 @@ export class CartComponent {
     this.cartService.deleteFromCart(item);
   }
 
+  updateQuantity(item: Item, qte: number) {
+    this.cartService.updateQuantity(item, qte);
+  }
+
   getQuantityInCart (id: string) {
     return this.cartService.getQuantityBuy(id);
+  }
+
+  itemTotal (prx: string, qte: number) {
+    return Number(prx) * qte;
   }
 
   totalCalculate () {
