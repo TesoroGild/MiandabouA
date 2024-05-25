@@ -69,8 +69,8 @@ export class CartService {
     if (index !== -1) {
       if (qte > 0) {
         this.cart[index].quantityBuy = qte;
-      } else if (qte <= 0) {
-        this.deleteFromCart(itemToModify);
+      //} else if (qte <= 0) {
+      //  this.deleteFromCart(itemToModify);
       } else {
         this.cart[index].quantityBuy = 0;
       }

@@ -135,4 +135,35 @@
   height: 100%;
 }
 /*********************************/
+
+/*********************************/
+/*     BEST SELLINGS SLIDER      */
+/*********************************/
+.blog-slider-wrapper .blog-card-list {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.blog-slider-wrapper .blog-card-list .blog-card-item {
+  border: 2px solid #c2bebe;
+  border-radius: 5%;
+  width: 24vw;
+  height: 85vh;
+  display: flex;
+}
+
+.blog1-card-item {
+  border: 2px solid #c2bebe;
+  border-radius: 5%;
+  width: 24vw;
+  height: 85vh;
+}
+
+.blog-slider-wrapper {
+  display: flex;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
 /*********************************/

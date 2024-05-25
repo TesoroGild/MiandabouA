@@ -204,44 +204,45 @@
 
 
     <!-- BLOG -->
-    <div class="mb-8">
+    <div class="h-screen">
         <div class="h-[5vh] my-8">
             <p class="mx-4 font-thin text-3xl text-gray-900 text-center">Nos blogs</p>
             <p class="text-center"><span class="absolute w-20 h-1 bg-[#e7cc96]"></span></p>
         </div>
-        <ng-container *ngIf="isBlogNotEmpty(); else blogEmpty">
-            <div class="grid-cols-1 sm:grid md:grid-cols-3">
-                <div *ngFor="let blog of test2 | slice:0:2">
-                    <div
-                        class="mx-3 mt-6 flex flex-col bg-white text-surface shadow-secondary-1 dark:bg-surface-dark dark:text-white sm:shrink-0 sm:grow sm:basis-0">
-                        <a href="#!">
-                            <img src="{{ blog.picture }}" alt="Skyscrapers" />
-                        </a>
-                        <div class="p-6">
-                            <h5 class="mb-2 text-xl font-medium leading-tight">{{ blog.title }}</h5>
-                            <p class="mb-4 text-base">
-                                {{ blog.description }}
-                            </p>
-                        </div>
-                        <div
-                            class="mt-auto border-t-2 border-neutral-100 px-6 py-3 text-center text-surface/75 dark:border-white/10 dark:text-neutral-300">
-                            <small>Posted {{ blog.datePosted }} \ {{ blog.author }}</small>
+        <div #blogsCarousel class="blogCardList h-[90vh] relative px-4">
+            <ng-container *ngIf="isBlogNotEmpty(); else blogEmpty">
+                <div class="blog-slider-wrapper">
+                    <div class="w-[70%] h-full blog-card-list">
+                        <div *ngFor="let blog of test2 | slice:0:2" class="blog-card-item shadow-2xl">
+                            <div
+                                class="mx-3 flex flex-col bg-white text-surface shadow-secondary-1 dark:bg-surface-dark dark:text-white sm:shrink-0 sm:grow sm:basis-0">
+                                <div class="h-[50%]">
+                                    <a href="#!">
+                                        <img class="h-full" src="{{ blog.picture }}" alt="Skyscrapers" />
+                                    </a>
+                                </div>
+                                <div class="h-[50%]">
+                                    <div class="py-2 h-[80%]">
+                                        <h5 class="mb-2 text-xl font-medium leading-tight">{{ blog.title }}</h5>
+                                        <p class="mb-4 font-light text-gray-500">
+                                            {{ blog.description }}
+                                        </p>
+                                    </div>
+                                    <div
+                                        class="h-[20%] mt-auto border-t-2 border-neutral-100 px-6 py-3 text-center text-surface/75 dark:border-white/10 dark:text-neutral-300">
+                                        <small>Posted {{ blog.datePosted }} \ {{ blog.author }}</small>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            
-                <div (click)="blogsPage()"
-                    class="cursor-pointer mx-3 mt-6 flex flex-col bg-white text-surface shadow-secondary-1 dark:bg-surface-dark dark:text-white sm:shrink-0 sm:grow sm:basis-0">
-                    <div
-                        class="block max-w-[18rem] rounded-lg bg-white text-left text-surface shadow-secondary-1 dark:bg-surface-dark dark:text-white">
+                    <div (click)="blogsPage()" class="blog1-card-item bg-white shadow-2xl">
                         <div class="p-6">
-                            <h5 class="mb-1 text-xl font-medium leading-tight ">
-                                Blogs
-                            </h5>
+                            <h5 class="mb-1 text-xl font-medium leading-tight ">Blogs</h5>
                             <p class="mb-4 text-base leading-normal">
                                 Consultez nos autres blogs. Certains vous interesserons sans doute.
-                                <svg class="w-6 h-6 text-gray-800 dark:text-white inline" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                    viewBox="0 0 14 10">
+                                <svg class="w-6 h-6 text-gray-800 dark:text-white inline" xmlns="http://www.w3.org/2000/svg"
+                                    fill="none" viewBox="0 0 14 10">
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M1 5h12m0 0L9 1m4 4L9 9" />
                                 </svg>
@@ -249,17 +250,17 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </ng-container>
-        <ng-template #blogEmpty>
-            <!-- No Blog -->
-            <div class="w-full p-4 ">
-                <div
-                    class="w-36 h-36 block bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
-                    <p class="font-normal text-gray-700 dark:text-gray-400">Aucun blog disponible</p>
+            </ng-container>
+            <ng-template #blogEmpty>
+                <!-- No Blog -->
+                <div class="w-full p-4 ">
+                    <div
+                        class="w-36 h-36 block bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                        <p class="font-normal text-gray-700 dark:text-gray-400">Aucun blog disponible</p>
+                    </div>
                 </div>
-            </div>
-        </ng-template>
+            </ng-template>
+        </div>
     </div>
 
 
