@@ -18,7 +18,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ReactiveFormsModule } from '@angular/forms';
 import { PwdrecoveryComponent } from './components/pwdrecovery/pwdrecovery.component';
 import { RegisterComponent } from './components/register/register.component';
-import { BillComponent } from './components/bill/bill.component';
+import { PaymentComponent } from './components/payment/payment.component';
+import { CheckoutComponent } from './components/checkout/checkout.component';
 import { ContactComponent } from './components/contact/contact.component';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 
@@ -26,7 +27,8 @@ import { LazyLoadImageModule } from 'ng-lazyload-image';
   declarations: [
     AppComponent,
     AboutComponent,
-    BillComponent,
+    PaymentComponent,
+    CheckoutComponent,
     CartComponent,
     ContactComponent,
     FootbarComponent,

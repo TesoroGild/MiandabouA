@@ -21,6 +21,8 @@ export class HomeComponent {
   @ViewChild('promosScrollbarTrack', { static: false }) public promosScrollbarTrack!: ElementRef<any>;
 
   @ViewChild('bestSellingsCarousel', { read: ElementRef }) public bestSellingsCarousel!: ElementRef<any>;
+  @ViewChild('blogsCard', { read: ElementRef }) public blogsCard!: ElementRef<any>;
+
   //@ViewChild('bsScrollbarThumb', { static: false }) public bsScrollbarThumb!: ElementRef<any>;
   //@ViewChild('bsScrollbarTrack', { static: false }) public bsScrollbarTrack!: ElementRef<any>;
 

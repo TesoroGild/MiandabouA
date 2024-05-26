@@ -3,6 +3,7 @@ import { Item, ItemCart } from '../../interfaces/item.interface';
 import { environment } from '../../../environments/dev.environment';
 import { CartService } from '../../services/cart/cart.service';
 import { AuthService } from '../../services/connection/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cart',
@@ -13,6 +14,7 @@ export class CartComponent {
 
   constructor(
     private cartService: CartService,
+    private router: Router,
     private authService: AuthService
   ) {}
 
@@ -97,24 +99,16 @@ export class CartComponent {
     this.loginModal = false;
   }
 
-  order () {
-    
-  }
-
-  buy () {
-
-  }
-
   picture (item: ItemCart) {
     return `${environment.backendUrl}/images/itemPic/${item.item.contenthash}`
   }
 
-  openPaymentModal() {
-    this.paymentModal = true;
+  checkoutPage() {
+    this.router.navigate(['/checkout']);
   }
 
-  closePaymentModal() {
-    this.paymentModal = false;
+  useACoupon() {
+    //this.paymentModal = false;
   }
 
 }
