@@ -22,6 +22,7 @@ import { PaymentComponent } from './components/payment/payment.component';
 import { CheckoutComponent } from './components/checkout/checkout.component';
 import { ContactComponent } from './components/contact/contact.component';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
+import { NotFoundComponent } from './components/not-found/not-found.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { LazyLoadImageModule } from 'ng-lazyload-image';
     NavbarComponent,
     UserComponent,
     PwdrecoveryComponent,
-    RegisterComponent
+    RegisterComponent,
+    NotFoundComponent
   ],
   imports: [
     BrowserModule,

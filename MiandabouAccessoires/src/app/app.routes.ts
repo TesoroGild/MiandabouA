@@ -16,11 +16,12 @@ import { CheckoutComponent } from './components/checkout/checkout.component';
 import { BlogComponent } from './components/blog/blog.component';
 import { PwdrecoveryComponent } from './components/pwdrecovery/pwdrecovery.component';
 import { RegisterComponent } from './components/register/register.component';
-//import { NotFoundComponent } from './components/not-found/not-found.component';
+import { NotFoundComponent } from './components/not-found/not-found.component';
 
 export const routes: Routes = [
-  { path: '', component: HomeComponent },
-  { path: 'home', component: HomeComponent },{ path: 'about', component: AboutComponent },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: 'home', component: HomeComponent },
+  { path: 'about', component: AboutComponent },
   { path: 'blog', component: BlogComponent },
   { path: 'payment', component: PaymentComponent },
   { path: 'checkout', component: CheckoutComponent },
@@ -37,7 +38,7 @@ export const routes: Routes = [
   { path: 'user', component: UserComponent, canActivate: [AdminGuard] },
   //{ path: 'admin', component: AdminComponent, canActivate: [AuthGuard] },
   //{ path: 'admin/:id/modifier', component: AdminComponent, canActivate: [AuthGuard] },
-  //{ path: '**', component: NotFoundComponent }
+  { path: '**', component: NotFoundComponent }
 ];
 
 @NgModule({
