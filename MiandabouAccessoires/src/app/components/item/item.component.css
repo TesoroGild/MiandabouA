@@ -1,0 +1,9 @@
+.position-cart-button {
+    position: absolute;
+    height: 50px;
+    outline: none;
+    cursor: pointer;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+}

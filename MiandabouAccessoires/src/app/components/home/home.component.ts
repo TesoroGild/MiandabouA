@@ -140,7 +140,7 @@ export class HomeComponent {
 
   constructor(
     private snackBar: MatSnackBar,
-    private router: Router, 
+    private router: Router,
     private formBuilder: FormBuilder,
     private emailService: EmailService,
     private itemService: ItemService

@@ -4,6 +4,7 @@ import { ItemService } from '../../services/item/item.service';
 import { Item } from '../../interfaces/item.interface';
 import { environment } from '../../../environments/dev.environment';
 import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-item',
@@ -19,6 +20,7 @@ export class ItemComponent {
 
   constructor (
     private cartService: CartService,
+    private router: Router, 
     private itemService: ItemService
   ) {
     this.itemsSubscription = this.items$.subscribe((i) => {
@@ -56,6 +58,10 @@ export class ItemComponent {
 
   picture (contenthash: any) {
     return `${environment.backendUrl}/images/itemPic/${contenthash}`
+  }
+
+  cartPage () {
+    this.router.navigate(['/cart']);
   }
 
 }
