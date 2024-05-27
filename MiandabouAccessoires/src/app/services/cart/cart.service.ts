@@ -9,30 +9,35 @@ import { ItemService } from '../item/item.service';
 export class CartService {
 
   private itemsCartSubject: BehaviorSubject<ItemCart[]>;
-  private totalSubject: BehaviorSubject<number>;
+  private cartTotalSubject: BehaviorSubject<number>;
+  private checkoutTotalSubject: BehaviorSubject<number>;
   private subTotalSubject: BehaviorSubject<number>;
   private tvqSubject: BehaviorSubject<number>;
   private tpsSubject: BehaviorSubject<number>;
+  private deliverySubject: BehaviorSubject<number>;
   private couponSubject: BehaviorSubject<number>;
 
   cart: ItemCart[] = [];
-  total: number = 0;
+  cartTotal: number = 0;
   subTotal: number = 0;
   tvqRate: number = 9.975;
   tvq: string = "0";
   tpsRate: number = 5;
   tps: string = "0";
+  delivery: number = 50
   coupon: number = 0;
 
   constructor (
     private itemService: ItemService
   ) {
     this.itemsCartSubject = new BehaviorSubject<ItemCart[]>([]);
-    this.totalSubject = new BehaviorSubject<number>(0);
+    this.cartTotalSubject = new BehaviorSubject<number>(0);
+    this.checkoutTotalSubject = new BehaviorSubject<number>(0);
     this.subTotalSubject = new BehaviorSubject<number>(0);
     this.tvqSubject = new BehaviorSubject<number>(0);
     this.tpsSubject = new BehaviorSubject<number>(0);
     this.couponSubject = new BehaviorSubject<number>(0);
+    this.deliverySubject = new BehaviorSubject<number>(50);
   }
 
   setItemsCartToDisplay (items: ItemCart[]) {
@@ -137,10 +142,36 @@ export class CartService {
   }
 
   totalCalculate () {
-    this.totalSubject.next(this.subTotal + Number(this.tvq) + Number(this.tps));
+    this.cartTotalSubject.next(this.subTotal + Number(this.tvq) + Number(this.tps));
   }
 
-  getTotal () {
-    return this.totalSubject.asObservable();
+  getCartTotal () {
+    return this.cartTotalSubject.asObservable();
+  }
+
+  couponCalcultate () {
+    this.coupon = parseFloat((this.subTotal * this.coupon / 100).toFixed(2));
+    this.couponSubject.next(this.coupon);
+  }
+
+  getCoupon () {
+    return this.couponSubject.asObservable();
+  }
+
+  deliveryCalcultate () {
+    //this.delivery = parseFloat((this.subTotal *  / 100).toFixed(2));
+    this.deliverySubject.next(this.delivery);
+  }
+
+  getDelivery () {
+    return this.deliverySubject.asObservable();
+  }
+
+  totalCheckout () {
+    this.checkoutTotalSubject.next(this.subTotal + Number(this.tvq) + Number(this.tps) - this.coupon);
+  }
+
+  getCheckoutTotal () {
+    return this.cartTotalSubject.asObservable();
   }
 }

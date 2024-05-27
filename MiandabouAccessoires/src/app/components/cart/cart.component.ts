@@ -19,6 +19,10 @@ export class CartComponent {
   ) {}
 
   ngOnInit() {
+    // this.cartService.subTotalCalculate();
+    // this.cartService.tvqCalculate();
+    // this.cartService.tpsCalculate();
+    // this.cartService.totalCalculate();
     this.cartService.getItemsCartToDisplay().subscribe(items => {
       this.cart = items;
     });
@@ -29,11 +33,9 @@ export class CartComponent {
       this.tvq = tvq;
     });
     this.cartService.getTps().subscribe(tps => {
-      console.log(tps);
       this.tps = tps;
     });
-    this.cartService.getTotal().subscribe(total => {
-      console.log(total)
+    this.cartService.getCartTotal().subscribe(total => {
       this.total = total;
     });
     // this.cartService.getCoupon().subscribe(coupon => {
