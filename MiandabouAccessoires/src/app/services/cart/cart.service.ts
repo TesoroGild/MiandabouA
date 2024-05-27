@@ -9,13 +9,30 @@ import { ItemService } from '../item/item.service';
 export class CartService {
 
   private itemsCartSubject: BehaviorSubject<ItemCart[]>;
+  private totalSubject: BehaviorSubject<number>;
+  private subTotalSubject: BehaviorSubject<number>;
+  private tvqSubject: BehaviorSubject<number>;
+  private tpsSubject: BehaviorSubject<number>;
+  private couponSubject: BehaviorSubject<number>;
 
   cart: ItemCart[] = [];
+  total: number = 0;
+  subTotal: number = 0;
+  tvqRate: number = 9.975;
+  tvq: string = "0";
+  tpsRate: number = 5;
+  tps: string = "0";
+  coupon: number = 0;
 
   constructor (
     private itemService: ItemService
   ) {
     this.itemsCartSubject = new BehaviorSubject<ItemCart[]>([]);
+    this.totalSubject = new BehaviorSubject<number>(0);
+    this.subTotalSubject = new BehaviorSubject<number>(0);
+    this.tvqSubject = new BehaviorSubject<number>(0);
+    this.tpsSubject = new BehaviorSubject<number>(0);
+    this.couponSubject = new BehaviorSubject<number>(0);
   }
 
   setItemsCartToDisplay (items: ItemCart[]) {
@@ -44,6 +61,7 @@ export class CartService {
       this.cart.push({ item: itemToAdd, quantityBuy: 1 });
     }
     this.itemsCartSubject.next(this.cart);
+    this.subTotalCalculate();
   }
 
   removeFromCart (itemToRemove: Item) {
@@ -55,12 +73,14 @@ export class CartService {
         this.cart.splice(index, 1);
       }
       this.itemsCartSubject.next(this.cart);
+      this.subTotalCalculate();
     }
   }
 
   deleteFromCart (itemToDelete: Item) {
     this.cart = this.cart.filter(item => item.item.id !== itemToDelete.id);
     this.itemsCartSubject.next(this.cart);
+    this.subTotalCalculate();
   }
 
   updateQuantity(itemToModify: Item, qte: number) {
@@ -69,12 +89,58 @@ export class CartService {
     if (index !== -1) {
       if (qte > 0) {
         this.cart[index].quantityBuy = qte;
-      //} else if (qte <= 0) {
-      //  this.deleteFromCart(itemToModify);
       } else {
         this.cart[index].quantityBuy = 0;
       }
       this.itemsCartSubject.next(this.cart);
+      this.subTotalCalculate();
     }
+  }
+
+  itemTotal (id: string) {
+    let quantity = this.cart.find(it => it.item.id === id)?.quantityBuy;
+    let price = this.cart.find(it => it.item.id === id)?.item.price;
+    if (quantity && price) return quantity * Number(price);
+    else return 0;
+  }
+
+  subTotalCalculate () {
+    this.subTotal = this.cart.reduce((subTotal, cartItem) => {
+      return subTotal + (Number(cartItem.item.price) * cartItem.quantityBuy);
+    }, 0);
+    this.subTotalSubject.next(parseFloat(this.subTotal.toFixed(2)));
+    this.tvqCalculate();
+  }
+
+  getSubTotal () {
+    return this.subTotalSubject.asObservable();
+  }
+
+  tvqCalculate () {
+    this.tvq = (this.subTotal * (this.tvqRate / 100)).toFixed(2);
+    this.tvqSubject.next(parseFloat(this.tvq));
+    this.tpsCalculate();
+  }
+
+  getTvq () {
+    return this.tvqSubject.asObservable();
+  }
+
+  tpsCalculate () {
+    this.tps = (this.subTotal * (this.tpsRate / 100)).toFixed(2);
+    this.tpsSubject.next(parseFloat(this.tps));
+    this.totalCalculate();
+  }
+
+  getTps () {
+    return this.tpsSubject.asObservable();
+  }
+
+  totalCalculate () {
+    this.totalSubject.next(this.subTotal + Number(this.tvq) + Number(this.tps));
+  }
+
+  getTotal () {
+    return this.totalSubject.asObservable();
   }
 }

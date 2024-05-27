@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -10,6 +10,7 @@ export class CheckoutComponent {
 
   policyModal: boolean = false;
   methodModal: string = "";
+  address: string = "";
 
   constructor (private router: Router) {}
 

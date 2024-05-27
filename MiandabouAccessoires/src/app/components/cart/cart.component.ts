@@ -22,13 +22,31 @@ export class CartComponent {
     this.cartService.getItemsCartToDisplay().subscribe(items => {
       this.cart = items;
     });
+    this.cartService.getSubTotal().subscribe(subTotal => {
+      this.subTotal = subTotal;
+    });
+    this.cartService.getTvq().subscribe(tvq => {
+      this.tvq = tvq;
+    });
+    this.cartService.getTps().subscribe(tps => {
+      console.log(tps);
+      this.tps = tps;
+    });
+    this.cartService.getTotal().subscribe(total => {
+      console.log(total)
+      this.total = total;
+    });
+    // this.cartService.getCoupon().subscribe(coupon => {
+    //   this.coupon = coupon;
+    // });
   }
 
   cart: ItemCart [] = [];
   total: number = 0;
   subTotal: number = 0;
-  Tvq: number = 9.975;
-  Tps: number = 5;
+  tvq: number = 0;
+  tps: number = 0;
+  coupon: number = 0;
   paymentModal: boolean = false;
   loginModal: boolean = false;
 
@@ -54,31 +72,38 @@ export class CartComponent {
     this.cartService.updateQuantity(item, qte);
   }
 
-  getQuantityInCart (id: string) {
-    return this.cartService.getQuantityBuy(id);
-  }
+  // getQuantityInCart (item: Item) {
+  //   return this.cartService.getQuantityBuy(item);
+  // }
 
-  itemTotal (prx: string, qte: number) {
-    return Number(prx) * qte;
-  }
-
-  totalCalculate () {
-    return this.subTotal + Number(this.TvqCalculate()) + Number(this.TpsCalculate());
+  itemTotal (id: string) {
+    return this.cartService.itemTotal(id);
   }
 
   subTotalCalculate () {
-    this.subTotal = this.cart.reduce((subTotal, cartItem) => {
-      return subTotal + (Number(cartItem.item.price) * cartItem.quantityBuy);
-    }, 0);
-    return this.subTotal.toFixed(2);
+    // this.subTotal = this.cart.reduce((subTotal, cartItem) => {
+    //   return subTotal + (Number(cartItem.item.price) * cartItem.quantityBuy);
+    // }, 0);
+    // return this.subTotal.toFixed(2);
+    return this.cartService.subTotalCalculate();
   }
 
-  TvqCalculate () {
-    return (this.subTotal * (this.Tvq / 100)).toFixed(2);
+  tvqCalculate () {
+    //return (this.subTotal * (this.tvq / 100)).toFixed(2);
+    return this.cartService.tvqCalculate();
   }
 
-  TpsCalculate () {
-    return (this.subTotal * (this.Tps / 100)).toFixed(2);
+  tpsCalculate () {
+    //return (this.subTotal * (this.tps / 100)).toFixed(2);
+    return this.cartService.tpsCalculate();
+  }
+
+  // couponCalculate () {
+  //   return this.cartService.couponCalculate();
+  // }
+
+  totalCalculate () {
+    return this.cartService.totalCalculate();
   }
 
   isUserLoggedIn () {
