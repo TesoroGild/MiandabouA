@@ -2,7 +2,7 @@
     <form>
         <div class="w-full flex justify-between">
             <!-- BILLING AND SHIPPING ADDRESS -->
-            <div class="w-[55%]">
+            <div class="w-[55%] mx-36 mb-8">
                 <div class="space-y-6">
                     <!-- ADDRESS -->
                     <div class="border-b border-gray-900/10 pb-6">
@@ -10,45 +10,58 @@
                         <p class="mt-1 text-sm leading-6 text-gray-600">Use a permanent address where you can receive mail.
                         </p>
     
-                        <div class="mt-5 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                        <div class="mt-5 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-5">
                             <div class="sm:col-span-3">
                                 <label for="first-name" class="block text-sm font-medium leading-6 text-gray-900">First
                                     name</label>
                                 <div class="mt-2">
                                     <input type="text" name="first-name" id="first-name" autocomplete="given-name"
-                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        class="block w-full border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                 </div>
                             </div>
     
-                            <div class="sm:col-span-3">
+                            <div class="sm:col-span-2">
                                 <label for="last-name" class="block text-sm font-medium leading-6 text-gray-900">Last
                                     name</label>
                                 <div class="mt-2">
                                     <input type="text" name="last-name" id="last-name" autocomplete="family-name"
-                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        class="block w-full border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                 </div>
                             </div>
     
-                            <div class="sm:col-span-4">
+                            <div class="sm:col-span-5">
                                 <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email
                                     address</label>
                                 <div class="mt-2">
                                     <input id="email" name="email" type="email" autocomplete="email"
-                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        class="block w-full border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                 </div>
                             </div>
     
-                            <div class="sm:col-span-3">
+                            <div class="sm:col-span-5">
                                 <label for="country"
                                     class="block text-sm font-medium leading-6 text-gray-900">Country</label>
-                                <div class="mt-2">
-                                    <select id="country" name="country" autocomplete="country-name"
-                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
-                                        <option>United States</option>
-                                        <option>Canada</option>
-                                        <option>Mexico</option>
-                                    </select>
-                                </div>
+                                
+                                    <div class="flex items-center md:order-2 space-x-1 md:space-x-0 rtl:space-x-reverse w-full border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="display: block;">
+                                        <button (click)="toggleCoutriesDropdown()" data-dropdown-toggle="language-dropdown-menu"
+                                            class="w-full py-2 inline-flex items-center font-medium px-4 text-sm text-gray-400 dark:text-white cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white">
+                                            {{ selectedCountry?.name.official || 'Select a country' }}
+                                        </button>
+                                        <!-- Dropdown -->
+                                        <div class="h-[50vh] overflow-y-auto border-0 gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 absolute z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 shadow dark:bg-gray-700"
+                                            id="language-dropdown-menu" [ngClass]="{ 'hidden': !coutriesDropdownOpen }">
+                                            <ul class="py-2 font-medium w-full" role="none">
+                                                <li *ngFor="let country of countries" (click)="selectCountry(country)"
+                                                    class="w-full px-4">
+                                    
+                                                        <div class="inline-flex items-center">
+                                                            <img [src]="country.flags.png" alt="countryFlag" class="w-6 h-4 mr-2">
+                                                        {{ country.name.official }}
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
                             </div>
     
                             <div class="col-span-full">
@@ -56,10 +69,10 @@
                                     address</label>
                                 <div class="mt-2">
                                     <input type="text" name="street-address" id="street-address"
-                                        autocomplete="street-address"
-                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                    <input type="text" name="suite" id="suite" autocomplete="suite"
-                                        class="mt-4 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        autocomplete="street-address" placeholder="   Numero et nom de rue"
+                                        class="block w-full border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                    <input type="text" name="suite" id="suite" autocomplete="suite" placeholder="   Appartement/Numéro de porte"
+                                        class="mt-4 block w-full border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                 </div>
                             </div>
 
@@ -67,7 +80,7 @@
                                 <label for="city" class="block text-sm font-medium leading-6 text-gray-900">City</label>
                                 <div class="mt-2">
                                     <input type="text" name="city" id="city" autocomplete="address-level2"
-                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        class="block w-full border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                 </div>
                             </div>
     
@@ -76,7 +89,7 @@
                                     Province</label>
                                 <div class="mt-2">
                                     <input type="text" name="region" id="region" autocomplete="address-level1"
-                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        class="block w-full border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                 </div>
                             </div>
     
@@ -85,7 +98,7 @@
                                     Postal code</label>
                                 <div class="mt-2">
                                     <input type="text" name="postal-code" id="postal-code" autocomplete="postal-code"
-                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        class="block w-full border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                 </div>
                             </div>
                         </div>

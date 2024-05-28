@@ -172,6 +172,6 @@ export class CartService {
   }
 
   getCheckoutTotal () {
-    return this.cartTotalSubject.asObservable();
+    return this.checkoutTotalSubject.asObservable();
   }
 }
