@@ -2,6 +2,9 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Item, ItemCart } from '../../interfaces/item.interface';
 import { ItemService } from '../item/item.service';
+import { Coupon } from '../../interfaces/coupon.interface';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/dev.environment';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +18,8 @@ export class CartService {
   private tvqSubject: BehaviorSubject<number>;
   private tpsSubject: BehaviorSubject<number>;
   private deliverySubject: BehaviorSubject<number>;
-  private couponSubject: BehaviorSubject<number>;
+  private couponsSubject: BehaviorSubject<Coupon[]>;
+  private couponsTotalSubject: BehaviorSubject<number>;
 
   cart: ItemCart[] = [];
   cartTotal: number = 0;
@@ -24,11 +28,27 @@ export class CartService {
   tvq: string = "0";
   tpsRate: number = 5;
   tps: string = "0";
-  delivery: number = 50
-  coupon: number = 0;
+  delivery: number = 50;
+  couponTotal: number = 0;
+  coupons: Coupon[] = [];
+  testCoupons = [
+    {
+      name: "Coupon1",
+      value: 10,
+      rate: 0,
+      end: "2024-05-30"
+    },
+    {
+      name: "Coupon2",
+      value: 0,
+      rate: 10,
+      end: "2024-05-30"
+    }
+  ]
 
   constructor (
-    private itemService: ItemService
+    private itemService: ItemService,
+    private http: HttpClient
   ) {
     this.itemsCartSubject = new BehaviorSubject<ItemCart[]>([]);
     this.cartTotalSubject = new BehaviorSubject<number>(0);
@@ -36,7 +56,8 @@ export class CartService {
     this.subTotalSubject = new BehaviorSubject<number>(0);
     this.tvqSubject = new BehaviorSubject<number>(0);
     this.tpsSubject = new BehaviorSubject<number>(0);
-    this.couponSubject = new BehaviorSubject<number>(0);
+    this.couponsTotalSubject = new BehaviorSubject<number>(0);
+    this.couponsSubject = new BehaviorSubject<Coupon[]>([]);
     this.deliverySubject = new BehaviorSubject<number>(50);
   }
 
@@ -142,20 +163,54 @@ export class CartService {
   }
 
   totalCalculate () {
-    this.cartTotalSubject.next(this.subTotal + Number(this.tvq) + Number(this.tps));
+    this.cartTotalSubject.next(this.subTotal + Number(this.tvq) + Number(this.tps) - this.couponTotal);
   }
 
   getCartTotal () {
     return this.cartTotalSubject.asObservable();
   }
 
-  couponCalcultate () {
-    this.coupon = parseFloat((this.subTotal * this.coupon / 100).toFixed(2));
-    this.couponSubject.next(this.coupon);
+  couponCalculate (couponsSelected: Coupon[]) {
+    this.couponTotal = 0;
+    console.log("TEST COUPON CALCUL")
+    
+    if (couponsSelected.length != 0) {
+      couponsSelected.forEach(selectedCoupon => {
+        //mettre les vrais coupons php
+        const coupon = this.testCoupons.find(c => c.name === selectedCoupon.name);
+        
+        if (coupon) {
+          if (coupon.value !== 0) {
+            this.couponTotal += coupon.value;
+          }
+          if (coupon.rate !== 0) {
+            this.couponTotal += parseFloat((this.subTotal * (coupon.rate / 100)).toFixed(2));
+          }
+        }
+      });
+    }
+    
+    this.couponsTotalSubject.next(this.couponTotal);
   }
 
-  getCoupon () {
-    return this.couponSubject.asObservable();
+  getCouponTotal () {
+    return this.couponsTotalSubject.asObservable();
+  }
+
+  getCoupons () {
+    this.http.get<any>(
+      `${environment.backendUrl}/php/coupons/couponsGet.php`
+    ).subscribe((couponsFounded: any) => {
+      console.log(couponsFounded.coupons);
+      if (couponsFounded.coupons != null && couponsFounded.coupons != undefined) {
+        this.coupons = couponsFounded.coupons;
+        this.couponsSubject.next(this.coupons);
+      }
+      //mettre les vrais coupons php
+      this.couponsSubject.next(this.testCoupons);
+      return this.couponsSubject.asObservable();
+    });
+    return this.couponsSubject.asObservable();
   }
 
   deliveryCalcultate () {
@@ -168,7 +223,7 @@ export class CartService {
   }
 
   totalCheckout () {
-    this.checkoutTotalSubject.next(this.subTotal + Number(this.tvq) + Number(this.tps) - this.coupon);
+    this.checkoutTotalSubject.next(this.subTotal + Number(this.tvq) + Number(this.tps) - this.couponTotal + this.delivery);
   }
 
   getCheckoutTotal () {

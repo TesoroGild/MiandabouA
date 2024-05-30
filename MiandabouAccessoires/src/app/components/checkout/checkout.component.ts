@@ -3,8 +3,10 @@ import { Router } from '@angular/router';
 import { CartService } from '../../services/cart/cart.service';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AuthService } from '../../services/connection/auth.service';
+import { CheckoutService } from '../../services/checkout/checkout.service';
 
 @Component({
   selector: 'app-checkout',
@@ -34,21 +36,85 @@ export class CheckoutComponent {
         Validators.required,
         Validators.pattern('^[^\s@]+@[^\s@]+\.[^\s@]{2,}$'),
         Validators.maxLength(35),
-      ],
+      ]
+    ],
+    address: [
+      null,
+      [
+        Validators.required
+      ]
+    ],
+    suite: [
+      null,
+      [
+        Validators.required
+      ]
+    ],
+    city: [
+      null,
+      [
+        Validators.required
+      ]
+    ],
+    state: [
+      null,
+      [
+        Validators.required
+      ]
+    ],
+    zipcode: [
+      null,
+      [
+        Validators.required
+      ]
+    ],
+    country: [
+      null,
+      [
+        Validators.required
+      ]
+    ],
+    phonenumber: [
+      null,
+      [
+        Validators.required
+      ]
+    ],
+    meansofcommunication: [
+      '',
+      [
+        Validators.required
+      ]
+    ],
+    istermaccepted: [
+      false,
+      [
+        Validators.required
+      ]
     ]
   });
 
   policyModal: boolean = false;
   methodModal: string = "";
-  address: string = "";
   private apiUrl = 'https://restcountries.com/v3.1/all';
   countries: any[] = [];
+  selectedValue: string = 'emailcommuication';
+  isChecked: boolean = false;
+
+  total: number = 0;
+  subTotal: number = 0;
+  delivery: number = 0;
+  userIsLoggedIn: boolean = false;
+  //coutriesDropdownOpen = false;
+  //selectedCountry: any;
 
   constructor (
-    private http: HttpClient,
+    //private http: HttpClient,
     private router: Router,
     private cartService: CartService,
     private formBuilder: FormBuilder,
+    private authService: AuthService,
+    private checkoutService: CheckoutService,
     private snackBar: MatSnackBar
   ) {}
 
@@ -59,17 +125,19 @@ export class CheckoutComponent {
     this.cartService.getCheckoutTotal().subscribe(total => {
       this.total = total;
     });
-    this.cartService.getCoupon().subscribe(coupon => {
-      this.coupon = coupon;
-    });
     this.cartService.getDelivery().subscribe(delivery => {
       this.delivery = delivery;
     });
+    // this.checkoutForm.get('istermaccepted')?.valueChanges.subscribe(termvalue => {
+    //   console.log('Checkbox is checked:', termvalue);
+    // });
+    // this.checkoutForm.get('meansofcommunication')?.valueChanges.subscribe(commuicationvalue => {
+    //   console.log('Selected option:', commuicationvalue);
+    // });
     //COUNTRIES WITH FLAGS API
     //this.getCountries().subscribe(data => {
     //  this.filterCountries(data);
     //});
-    this.autoCompleteAddress();
   }
 
   ngAfterViewInit () {
@@ -88,13 +156,6 @@ export class CheckoutComponent {
       this.fillInAddress(place);
     });
   }
-
-  total: number = 0;
-  subTotal: number = 0;
-  coupon: number = 0;
-  delivery: number = 0;
-  //coutriesDropdownOpen = false;
-  //selectedCountry: any;
 
   //COUNTRIES WITH FLAGS AND DROPDOWN
   // getCountries(): Observable<any[]> {
@@ -119,6 +180,15 @@ export class CheckoutComponent {
   //   this.coutriesDropdownOpen = false;
   // }
 
+  isUserLoggedIn() {
+    this.authService.userIsLoggedIn.subscribe({
+      next: (result)=> {
+        this.userIsLoggedIn = result;
+      }
+    })
+    return this.userIsLoggedIn; 
+  }
+
   paymentPage () {
     this.router.navigate(['/payment']);
   }
@@ -136,45 +206,61 @@ export class CheckoutComponent {
   }
 
   validForm () {
-    // console.log("CHECKOUT: VALID FORM");
-    // let firstNameValue = this.checkoutForm.get("firstName")?.value;
-    // let lastNameValue = this.checkoutForm.get("lastName")?.value;
-    // let emailValue = this.checkoutForm.get("email")?.value;
+    if (this.isUserLoggedIn()) {
+      console.log("CHECKOUT: USER IS LOGGED IN");
+    } else {
+      console.log("CHECKOUT: USER IS NOT LOGGED IN");
+      let firstNameValue = this.checkoutForm.get("firstName")?.value;
+      let lastNameValue = this.checkoutForm.get("lastName")?.value;
+      let emailValue = this.checkoutForm.get("email")?.value;
+      let addressValue = this.checkoutForm.get("address")?.value;
+      let suiteValue = this.checkoutForm.get("suite")?.value;
+      let cityValue = this.checkoutForm.get("city")?.value;
+      let stateValue = this.checkoutForm.get("state")?.value;
+      let zipcodeValue = this.checkoutForm.get("zipcode")?.value;
+      let countryValue = this.checkoutForm.get("country")?.value;
+      let meansofcommunicationValue = this.checkoutForm.get("meansofcommunication")?.value;
+      let istermacceptedValue = this.checkoutForm.get("istermaccepted")?.value;
+        
+      const orderToCreate = new FormData();
+      orderToCreate.append("firstName", this.checkoutForm.get("firstName")?.value);
+      orderToCreate.append("lastName", this.checkoutForm.get("lastName")?.value);
+      orderToCreate.append("email", this.checkoutForm.get("email")?.value);
+      orderToCreate.append("address", this.checkoutForm.get("address")?.value);
+      orderToCreate.append("suite", this.checkoutForm.get("suite")?.value);
+      orderToCreate.append("city", this.checkoutForm.get("city")?.value);
+      orderToCreate.append("state", this.checkoutForm.get("state")?.value);
+      orderToCreate.append("zipcode", this.checkoutForm.get("zipcode")?.value);
+      orderToCreate.append("country", this.checkoutForm.get("country")?.value);
+      orderToCreate.append("meansofcommunication", this.checkoutForm.get("meansofcommunication")?.value);
+      orderToCreate.append("istermaccepted", this.checkoutForm.get("istermaccepted")?.value);
       
-    // const orderToCreate = new FormData();
-    // orderToCreate.append("firstName", this.checkoutForm.get("firstName")?.value);
-    // orderToCreate.append("lastName", this.checkoutForm.get("lastName")?.value);
-    // orderToCreate.append("email", this.checkoutForm.get("email")?.value);
-    
-    // if (emailValue != null && firstNameValue != null
-    //   && lastNameValue != null
-    // ) {
-    //   this.checkoutService.order(orderToCreate).subscribe((orderCreated: any) => {
-    //     console.log(orderCreated);
-    //     if (orderCreated.oder != null && orderCreated.oder != undefined) {
-    //       this.snackBar.open(orderCreated.msg, "", {
-    //         duration: 3000,
-    //         horizontalPosition: 'center',
-    //         verticalPosition: 'bottom',
-    //         panelClass: 'success'
-    //       });
-    //       this.checkoutForm.reset();
-    //       this.router.navigate(['']);
-    //     } else {
-    //       this.snackBar.open(orderCreated.msg, "", {
-    //         duration: 3000,
-    //         horizontalPosition: 'center',
-    //         verticalPosition: 'bottom',
-    //         panelClass: 'fail'
-    //       });
-    //       this.checkoutForm.reset();
-    //     }
-    //   });
-    // } else this.checkoutForm.markAllAsTouched();
-  }
-
-  autoCompleteAddress() {
-    
+      if (emailValue != null && firstNameValue != null
+        && lastNameValue != null
+      ) {
+        this.checkoutService.order(orderToCreate).subscribe((orderCreated: any) => {
+          console.log(orderCreated);
+          if (orderCreated.oder != null && orderCreated.oder != undefined) {
+            this.snackBar.open(orderCreated.msg, "", {
+              duration: 3000,
+              horizontalPosition: 'center',
+              verticalPosition: 'bottom',
+              panelClass: 'success'
+            });
+            this.checkoutForm.reset();
+            this.router.navigate(['']);
+          } else {
+            this.snackBar.open(orderCreated.msg, "", {
+              duration: 3000,
+              horizontalPosition: 'center',
+              verticalPosition: 'bottom',
+              panelClass: 'fail'
+            });
+            this.checkoutForm.reset();
+          }
+        });
+      } else this.checkoutForm.markAllAsTouched();
+    }
   }
 
   fillInAddress(place: google.maps.places.PlaceResult) {
@@ -194,4 +280,64 @@ export class CheckoutComponent {
     (document.getElementById('country-input') as HTMLInputElement).value = addressComponents['country'] || '';
   }
 
+  //firstname
+  firstnameEmpty(): boolean {
+    return this.showError("firstname", "required");
+  }
+
+  firstnameLength(): boolean {
+    return this.checkoutForm.get('firstname')!.hasError('maxlength') 
+      && this.checkoutForm.get('firstname')!.touched;
+  }
+
+  //lastname
+  lastnameEmpty(): boolean {
+    return this.showError("lastname", "required");
+  }
+
+  lastnameLength(): boolean {
+    return this.checkoutForm.get('lastname')!.hasError('maxlength') 
+      && this.checkoutForm.get('lastname')!.touched;
+  }
+
+  //email
+  emailEmpty(): boolean {
+    return this.showError("email", "required");
+  }
+
+  emailFormat(): boolean {
+    return this.checkoutForm.get('email')!.hasError('pattern') 
+      && this.checkoutForm.get('email')!.touched;
+  }
+
+  emailLength(): boolean {
+    return this.checkoutForm.get('email')!.hasError('maxlength') 
+      && this.checkoutForm.get('email')!.touched;
+  }
+
+  //phonenumber
+  formatPhoneNumberInput(inputElement: HTMLInputElement) {
+    let rawValue = inputElement.value.replace(/\D/g, '');
+
+    let formattedNumber = '';
+    if (rawValue.length > 0) {
+      formattedNumber = '(' + rawValue.substring(0, 3) + ') ' + rawValue.substring(3, 6) + '-' + rawValue.substring(6, 10);
+    }
+    
+    inputElement.value = formattedNumber;
+  }
+
+  phoneNumberFormat() {
+    return this.checkoutForm.get('phonenumber')!.hasError('pattern') 
+      && this.checkoutForm.get('phonenumber')!.touched;
+  }
+
+  private showError(
+    field: "email" | "firstname" | "lastname" | "address" | "city" | "state" | "zip" | "country" | "phonenumber", 
+    error: string): boolean {
+    return (
+      this.checkoutForm.controls[field].hasError(error) &&
+      (this.checkoutForm.controls[field].dirty || this.checkoutForm.controls[field].touched)
+    );
+  }
 }

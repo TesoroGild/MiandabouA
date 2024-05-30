@@ -34,15 +34,15 @@ export class UserService {
     );
   }
 
-  updateUser(user: User): any {
+  updateUser(user: FormData): any {
     
   }
 
-  enableUser(id: string) {
+  enableUser(id: FormData) {
     
   }
 
-  disableUser(id: string) {
+  disableUser(id: FormData) {
     
   }
 

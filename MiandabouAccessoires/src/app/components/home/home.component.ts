@@ -8,6 +8,7 @@ import { EmailService } from '../../services/email/email.service';
 import { ItemService } from '../../services/item/item.service';
 import { environment } from '../../../environments/dev.environment';
 import { Subscription } from 'rxjs';
+import { CartService } from '../../services/cart/cart.service';
 
 @Component({
   selector: 'app-home',
@@ -145,7 +146,8 @@ export class HomeComponent {
     private router: Router,
     private formBuilder: FormBuilder,
     private emailService: EmailService,
-    private itemService: ItemService
+    private itemService: ItemService,
+    private cartService: CartService
   ) {
     this.promosSubscription = this.promos$.subscribe((p) => {
       this.promos = p;
@@ -159,6 +161,7 @@ export class HomeComponent {
 
   ngOnInit (): void {
     this.getItems();
+    this.getCoupons();
     this.blogs = this.test2;
   }
 
@@ -184,6 +187,10 @@ export class HomeComponent {
 
   getItems () {
     this.itemService.getItems();
+  }
+
+  getCoupons () {
+    this.cartService.getCoupons();
   }
 
   isPromoNotEmpty() {

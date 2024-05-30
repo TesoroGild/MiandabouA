@@ -4,6 +4,7 @@ import { environment } from '../../../environments/dev.environment';
 import { CartService } from '../../services/cart/cart.service';
 import { AuthService } from '../../services/connection/auth.service';
 import { Router } from '@angular/router';
+import { Coupon } from '../../interfaces/coupon.interface';
 
 @Component({
   selector: 'app-cart',
@@ -19,10 +20,6 @@ export class CartComponent {
   ) {}
 
   ngOnInit() {
-    // this.cartService.subTotalCalculate();
-    // this.cartService.tvqCalculate();
-    // this.cartService.tpsCalculate();
-    // this.cartService.totalCalculate();
     this.cartService.getItemsCartToDisplay().subscribe(items => {
       this.cart = items;
     });
@@ -38,9 +35,12 @@ export class CartComponent {
     this.cartService.getCartTotal().subscribe(total => {
       this.total = total;
     });
-    // this.cartService.getCoupon().subscribe(coupon => {
-    //   this.coupon = coupon;
-    // });
+    this.cartService.getCouponTotal().subscribe(total => {
+      this.couponsTotal = total;
+    })
+    this.cartService.getCoupons().subscribe(coupons => {
+      this.coupons = coupons;
+    });
   }
 
   cart: ItemCart [] = [];
@@ -48,8 +48,11 @@ export class CartComponent {
   subTotal: number = 0;
   tvq: number = 0;
   tps: number = 0;
-  coupon: number = 0;
+  coupons: Coupon[] = [];
+  couponsSelected: Coupon[] = [];
+  couponsTotal: number = 0;
   paymentModal: boolean = false;
+  couponsModal: boolean = false;
   loginModal: boolean = false;
 
   cartEmpty() {
@@ -74,10 +77,6 @@ export class CartComponent {
     this.cartService.updateQuantity(item, qte);
   }
 
-  // getQuantityInCart (item: Item) {
-  //   return this.cartService.getQuantityBuy(item);
-  // }
-
   itemTotal (id: string) {
     return this.cartService.itemTotal(id);
   }
@@ -100,9 +99,9 @@ export class CartComponent {
     return this.cartService.tpsCalculate();
   }
 
-  // couponCalculate () {
-  //   return this.cartService.couponCalculate();
-  // }
+  couponCalculate () {
+    return this.cartService.couponCalculate(this.couponsSelected);
+  }
 
   totalCalculate () {
     return this.cartService.totalCalculate();
@@ -134,8 +133,13 @@ export class CartComponent {
     this.router.navigate(['/checkout']);
   }
 
-  useACoupon() {
-    //this.paymentModal = false;
+  openCouponsModal () {
+    this.couponsModal = true;
+    console.log(this.coupons)
+  }
+
+  closeCouponsModal () {
+    this.couponsModal = false;
   }
 
 }
