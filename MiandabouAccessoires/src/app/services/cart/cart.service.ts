@@ -31,20 +31,7 @@ export class CartService {
   delivery: number = 50;
   couponTotal: number = 0;
   coupons: Coupon[] = [];
-  testCoupons = [
-    {
-      name: "Coupon1",
-      value: 10,
-      rate: 0,
-      end: "2024-05-30"
-    },
-    {
-      name: "Coupon2",
-      value: 0,
-      rate: 10,
-      end: "2024-05-30"
-    }
-  ]
+  couponsSelected: Coupon[] = [];
 
   constructor (
     private itemService: ItemService,
@@ -155,7 +142,7 @@ export class CartService {
   tpsCalculate () {
     this.tps = (this.subTotal * (this.tpsRate / 100)).toFixed(2);
     this.tpsSubject.next(parseFloat(this.tps));
-    this.totalCalculate();
+    this.couponCalculate();
   }
 
   getTps () {
@@ -170,20 +157,19 @@ export class CartService {
     return this.cartTotalSubject.asObservable();
   }
 
-  couponCalculate (couponsSelected: Coupon[]) {
+  couponCalculate () {
     this.couponTotal = 0;
     console.log("TEST COUPON CALCUL")
     
-    if (couponsSelected.length != 0) {
-      couponsSelected.forEach(selectedCoupon => {
-        //mettre les vrais coupons php
-        const coupon = this.testCoupons.find(c => c.name === selectedCoupon.name);
-        
+    if (this.couponsSelected.length !== 0) {
+      this.couponsSelected.forEach(selectedCoupon => {
+        const coupon = this.coupons.find(c => c.name === selectedCoupon.name);
+
         if (coupon) {
-          if (coupon.value !== 0) {
-            this.couponTotal += coupon.value;
+          if (coupon.value != 0) {
+            this.couponTotal += Number(coupon.value);
           }
-          if (coupon.rate !== 0) {
+          if (coupon.rate != 0) {
             this.couponTotal += parseFloat((this.subTotal * (coupon.rate / 100)).toFixed(2));
           }
         }
@@ -191,6 +177,7 @@ export class CartService {
     }
     
     this.couponsTotalSubject.next(this.couponTotal);
+    this.totalCalculate();
   }
 
   getCouponTotal () {
@@ -201,16 +188,31 @@ export class CartService {
     this.http.get<any>(
       `${environment.backendUrl}/php/coupons/couponsGet.php`
     ).subscribe((couponsFounded: any) => {
-      console.log(couponsFounded.coupons);
-      if (couponsFounded.coupons != null && couponsFounded.coupons != undefined) {
+      if (couponsFounded.coupons != null && couponsFounded.coupons != undefined)
         this.coupons = couponsFounded.coupons;
-        this.couponsSubject.next(this.coupons);
-      }
-      //mettre les vrais coupons php
-      this.couponsSubject.next(this.testCoupons);
+
+      this.couponsSubject.next(this.coupons);
       return this.couponsSubject.asObservable();
     });
     return this.couponsSubject.asObservable();
+  }
+
+  setAllCoupons () {
+    this.couponsSelected = this.coupons;
+  }
+
+  cancelCoupons () {
+    this.couponsSelected = [];
+    this.couponCalculate();
+  }
+
+  setCoupon (couponToAdd: Coupon) {
+    const index = this.couponsSelected.findIndex(coupon => coupon.name === couponToAdd.name);
+    if (index === -1) {
+      this.couponsSelected.push(couponToAdd);
+    } else {
+      this.couponsSelected.splice(index, 1);
+    }
   }
 
   deliveryCalcultate () {

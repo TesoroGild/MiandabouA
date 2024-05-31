@@ -40,6 +40,7 @@ export class CartComponent {
     })
     this.cartService.getCoupons().subscribe(coupons => {
       this.coupons = coupons;
+      this.checkboxStates = this.coupons.map(() => false);
     });
   }
 
@@ -54,6 +55,7 @@ export class CartComponent {
   paymentModal: boolean = false;
   couponsModal: boolean = false;
   loginModal: boolean = false;
+  checkboxStates: boolean[] = [];
 
   cartEmpty() {
     if (this.cart.length != 0)
@@ -99,8 +101,29 @@ export class CartComponent {
     return this.cartService.tpsCalculate();
   }
 
-  couponCalculate () {
-    return this.cartService.couponCalculate(this.couponsSelected);
+  selectedAllCoupons () {
+    this.cartService.setAllCoupons();
+  }
+
+  setCoupon (coupon: Coupon, index: number) {
+    this.checkboxStates[index] = !this.checkboxStates[index];
+    this.cartService.setCoupon(coupon);
+  }
+
+  cancelCoupons () {
+    this.closeCouponsModal();
+    this.cartService.cancelCoupons();  
+  }
+
+  applyCoupons () {
+    this.closeCouponsModal();
+    return this.cartService.couponCalculate();
+  }
+
+  applyAllCoupons () {
+    this.closeCouponsModal();
+    this.selectedAllCoupons();
+    return this.cartService.couponCalculate();
   }
 
   totalCalculate () {
@@ -135,7 +158,6 @@ export class CartComponent {
 
   openCouponsModal () {
     this.couponsModal = true;
-    console.log(this.coupons)
   }
 
   closeCouponsModal () {
