@@ -8,13 +8,13 @@
             class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
             <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
                 <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-                    Connectez-vous
+                    Créer un nouveau compte
                 </h1>
 
                 <!--Sign in section-->
                 <div class="flex flex-row items-center justify-center lg:justify-start">
-                    <p class="mb-0 me-4 text-lg">Connection avec</p>
-                
+                    <p class="mb-0 me-4 text-lg">Avec</p>
+
                     <!-- Facebook -->
                     <button type="button" data-twe-ripple-init data-twe-ripple-color="light"
                         class=" mx-1 inline-block h-9 w-9 rounded-full bg-[#e7cc96] fill-white p-2 uppercase leading-normal shadow-primary-3 transition duration-150 ease-in-out hover:bg-primary-accent-300 hover:shadow-primary-2 focus:bg-primary-accent-300 focus:shadow-primary-2 focus:outline-none focus:ring-0 active:bg-primary-600 active:shadow-primary-2 dark:shadow-black/30 dark:hover:shadow-dark-strong dark:focus:shadow-dark-strong dark:active:shadow-dark-strong">
@@ -27,21 +27,21 @@
                             </svg>
                         </span>
                     </button>
-                
+
                     <!-- Instagram -->
                     <button type="button" data-twe-ripple-init data-twe-ripple-color="light"
                         class=" mx-1 inline-block h-9 w-9 rounded-full bg-[#e7cc96] fill-white p-2 uppercase leading-normal shadow-primary-3 transition duration-150 ease-in-out hover:bg-primary-accent-300 hover:shadow-primary-2 focus:bg-primary-accent-300 focus:shadow-primary-2 focus:outline-none focus:ring-0 active:bg-primary-600 active:shadow-primary-2 dark:shadow-black/30 dark:hover:shadow-dark-strong dark:focus:shadow-dark-strong dark:active:shadow-dark-strong">
                         <!-- Instagram -->
                         <span class="[&>svg]:mx-auto [&>svg]:h-3.5 [&>svg]:w-3.5">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6">
                                 <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
                                 <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
                                 <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
                             </svg>
                         </span>
                     </button>
-                
+
                     <!-- Linkedin -->
                     <button type="button" data-twe-ripple-init data-twe-ripple-color="light"
                         class=" mx-1 inline-block h-9 w-9 rounded-full bg-[#e7cc96] fill-white p-2 uppercase leading-normal shadow-primary-3 transition duration-150 ease-in-out hover:bg-primary-accent-300 hover:shadow-primary-2 focus:bg-primary-accent-300 focus:shadow-primary-2 focus:outline-none focus:ring-0 active:bg-primary-600 active:shadow-primary-2 dark:shadow-black/30 dark:hover:shadow-dark-strong dark:focus:shadow-dark-strong dark:active:shadow-dark-strong">
@@ -64,48 +64,93 @@
                     </p>
                 </div>
 
-                <form 
-                    class="space-y-4 md:space-y-6" 
-                    (ngSubmit)="login()"
-                    [formGroup]="loginForm"
-                >
+                <form class="space-y-4 md:space-y-6" (ngSubmit)="register()" [formGroup]="registerForm">
+
+                    <!--  FIRST NAME -->
+                    <div class="mb-5">
+                        <label for="firstname" class="mb-3 block text-base font-medium text-[#07074D]">
+                            *Prénom
+                        </label>
+                        <input type="text" name="firstname" id="firstname" placeholder="First Name"
+                            class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+                            formControlName="firstname" />
+                        <span *ngIf="firstnameEmpty()" class="text-xs font-light text-red-500"
+                            style="margin: 0px;">Veuillez
+                            saisir un prénom.</span>
+                        <span *ngIf="firstnameLength()" class="text-xs font-light text-red-500"
+                            style="margin: 0px;">Vous
+                            avez dépassé la taille maximale de 35 caractères.</span>
+                    </div>
+
+                    <!--  LAST NAME -->
+                    <div class="mb-5">
+                        <label for="lastname" class="mb-3 block text-base font-medium text-[#07074D]">
+                            *Nom
+                        </label>
+                        <input type="text" name="lastname" id="lastname" placeholder="Last Name"
+                            class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+                            formControlName="lastname" />
+                        <span *ngIf="lastnameEmpty()" class="text-xs font-light text-red-500"
+                            style="margin: 0px;">Veuillez
+                            saisir votre nom.</span>
+                        <span *ngIf="lastnameLength()" class="text-xs font-light text-red-500" style="margin: 0px;">Vous
+                            avez dépassé la taille maximale de 35 caractères.</span>
+                    </div>
+
                     <!--  EMAIL -->
                     <div>
-                        <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+                        <label for="email"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">*Email</label>
                         <!--  required="" -->
                         <input type="email" name="email" id="email"
                             class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            placeholder="name@company.com"
-                            formControlName="email"
-                        >
-                        <span *ngIf="emailEmpty()" 
-                            class="text-xs font-light text-red-500" 
-                            style="margin: 0px;"
-                        >Veuillez saisir un email.</span>
-                        
-                        <span *ngIf="emailFormat()" 
-                            class="text-xs font-light text-red-500" 
-                            style="margin: 0px;"
-                        >Format email invalid!</span>
-                        <span *ngIf="emailLength()"
-                            class="text-xs font-light text-red-500" 
-                            style="margin: 0px;"
-                        >Vous avez dépassé la taille maximale de 35 caractères.</span>
+                            placeholder="name@company.com" formControlName="email">
+                        <span *ngIf="emailEmpty()" class="text-xs font-light text-red-500" style="margin: 0px;">Veuillez
+                            saisir un email.</span>
+                        <span *ngIf="emailFormat()" class="text-xs font-light text-red-500" style="margin: 0px;">Format
+                            email invalid!</span>
+                        <span *ngIf="emailLength()" class="text-xs font-light text-red-500" style="margin: 0px;">Vous
+                            avez dépassé la taille maximale de 35 caractères.</span>
+                    </div>
+
+                    <!--  TEL -->
+                    <div class="mb-5">
+                        <label for="tel" class="mb-3 block text-base font-medium text-[#07074D]">
+                            Téléphone
+                        </label>
+                        <input type="text" name="tel" id="tel" placeholder="(111) 111-1111" #phoneInput
+                            (input)="formatInput(phoneInput)"
+                            class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+                            formControlName="tel" />
+                        <span *ngIf="phoneFormat()" class="text-xs font-light text-red-500" style="margin: 0px;">Mauvais
+                            format.</span>
                     </div>
 
                     <!--  PASSWORD -->
                     <div>
-                        <label for="password"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mot de passe</label>
+                        <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">*Mot
+                            de passe</label>
                         <input type="password" name="password" id="password" placeholder="••••••••"
                             class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             formControlName="password">
-                            <span *ngIf="passwordEmpty()" 
-                                class="text-xs font-light text-red-500" 
-                                style="margin: 0px;">Veuillez saisir le mot de passe.
-                            </span>
+                        <span *ngIf="passwordEmpty()" class="text-xs font-light text-red-500"
+                            style="margin: 0px;">Veuillez
+                            saisir le mot de passe.</span>
                     </div>
 
+                    <!--  CONFIRM PASSWORD -->
+                    <div>
+                        <label for="cpassword"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">*Confirmez votre mot
+                            de passe</label>
+                        <input type="password" name="cpassword" id="cpassword" placeholder="••••••••"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            [(ngModel)]="cpassword" [ngModelOptions]="{standalone: true}">
+                        <span *ngIf="!cpasswordMatch()" class="text-xs font-light text-red-500" style="margin: 0px;">Les
+                            mots de passe ne correspondent pas.</span>
+                    </div>
+
+                    <!--  POLICY CONDITIONS -->
                     <div class="flex items-center justify-between">
                         <div class="flex items-start">
                             <div class="flex items-center h-5">
@@ -114,22 +159,17 @@
                                     required="">
                             </div>
                             <div class="ml-3 text-sm">
-                                <label for="remember" class="text-gray-500 dark:text-gray-300">Se souvenir de moi</label>
+                                <label for="remember" class="text-gray-500 dark:text-gray-300">J'ai lu et j'accepte les
+                                    conditions d'utilisation</label>
                             </div>
                         </div>
-                        <a href="#"
-                            class="text-sm font-medium text-[#af8124] hover:underline dark:text-[#e7cc96]">Mot de passse oublié?</a>
                     </div>
-                    <button 
-                        type="submit"
-                        class="w-full text-white bg-[#e7cc96] disabled:hover:bg-[#e7cc96] hover:bg-[#e7cc96]  focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-[#e7cc96] dark:hover:bg-[#e7cc96] dark:focus:ring-primary-800 disabled:opacity-50"
-                    >Connection
+
+                    <!--  SUBMIT -->
+                    <button type="submit"
+                        class="w-full text-white bg-[#e7cc96] disabled:hover:bg-[#e7cc96] hover:bg-[#e7cc96]  focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-[#e7cc96] dark:hover:bg-[#e7cc96] dark:focus:ring-primary-800 disabled:opacity-50">
+                        Créer
                     </button>
-                    <p class="text-sm font-light text-gray-500 dark:text-gray-400">
-                        Vous n’avez pas de compte? 
-                        <a href="/registerclient" class="font-medium text-[#af8124] hover:underline dark:text-primary-500">Créez</a>
-                        en un!
-                    </p>
                 </form>
             </div>
         </div>

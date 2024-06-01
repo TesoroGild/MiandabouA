@@ -17,7 +17,8 @@
                             <div class="sm:col-span-3">
                                 <label for="firstname" class="block text-sm font-medium leading-6 text-gray-900">First name *</label>
                                 <div class="mt-2">
-                                    <input type="text" name="firstname" id="firstname" autocomplete="given-name"
+                                    <input [disabled]="userToDisplay.id !== undefined || userToDisplay.id !== null" 
+                                        type="text" name="firstname" id="firstname" autocomplete="given-name"
                                         class="pl-4 block w-full border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                         formControlName="firstname">
                                     <span *ngIf="firstnameEmpty()" class="text-xs font-light text-red-500" style="margin: 0px;">Veuillez
@@ -30,7 +31,8 @@
                             <div class="sm:col-span-2">
                                 <label for="last-name" class="block text-sm font-medium leading-6 text-gray-900">Last name *</label>
                                 <div class="mt-2">
-                                    <input type="text" name="lastname" id="lastname" autocomplete="family-name"
+                                    <input [disabled]="userToDisplay.id !== undefined || userToDisplay.id !== null"
+                                        type="text" name="lastname" id="lastname" autocomplete="family-name"
                                         class="pl-4 block w-full border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                         formControlName="lastname">
                                     <span *ngIf="lastnameEmpty()" class="text-xs font-light text-red-500" style="margin: 0px;">Veuillez
@@ -43,7 +45,8 @@
                             <div class="sm:col-span-3">
                                 <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email address *</label>
                                 <div class="mt-2">
-                                    <input id="email" name="email" type="email" autocomplete="email"
+                                    <input [disabled]="userToDisplay.id !== undefined || userToDisplay.id !== null" 
+                                        id="email" name="email" type="email" autocomplete="email"
                                         class="pl-4 block w-full border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                         formControlName="email">
                                     <span *ngIf="emailEmpty()" class="text-xs font-light text-red-500" style="margin: 0px;">Veuillez
@@ -58,7 +61,8 @@
                             <div class="sm:col-span-2">
                                 <label for="phonenumber" class="block text-sm font-medium leading-6 text-gray-900">Téléphone</label>
                                 <div class="mt-2">
-                                    <input type="text" name="phonenumber" id="phonenumber" placeholder="(111) 111-1111"
+                                    <input [disabled]="userToDisplay.tel !== undefined || userToDisplay.tel !== null || userToDisplay.tel !== ''" 
+                                        type="text" name="phonenumber" id="phonenumber" placeholder="(111) 111-1111"
                                         #phoneInput 
                                         (input)="formatPhoneNumberInput(phoneInput)"
                                         class="pl-4 block w-full border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"

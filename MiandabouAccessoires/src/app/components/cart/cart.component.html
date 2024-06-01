@@ -100,9 +100,8 @@
             </button>
         </div>
         <div *ngIf="!isUserLoggedIn()"
-            (click)="openLoginModal()"
             class="flex items-center flex-col sm:flex-row justify-center gap-3 mt-8">
-            <button
+            <button (click)="openLoginModal()"
                 class="rounded-full py-4 w-full max-w-[280px] flex items-center bg-indigo-50 justify-center transition-all duration-500 hover:bg-indigo-100">
                 <span class="px-2 font-semibold text-lg leading-8 text-indigo-600">Connectez-vous pour poursuivre votre achat</span>
                 <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
@@ -118,9 +117,9 @@
 <!-- Login Modal -->
 <div *ngIf="loginModal" id="loginModal" class="fixed z-10 inset-0 overflow-y-auto">
     <div class="flex items-center justify-center min-h-screen">
-        <div class="bg-white w-1/2 p-6 rounded shadow-md">
+        <div class="bg-white w-1/2 px-6 pt-6 rounded shadow-md">
             <!-- Modal header -->
-            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+            <div class="flex items-center justify-between px-4 md:px-5 border-b rounded-t dark:border-gray-600">
                 <h3 class="text-xl font-semibold text-gray-900 dark:text-white"></h3>
                 <!-- Close Button -->
                 <button type="button"
@@ -137,8 +136,8 @@
             <!-- Modal body -->
             <app-login></app-login>
             <!-- Modal footer -->
-            <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
-                <button type="button"
+            <div class="flex items-center px-4 pt-4 md:px-5 md:pt-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+                <button (click)="closeLoginModal()"
                     class="text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-800 dark:bg-white dark:border-gray-700 dark:text-gray-900 dark:hover:bg-gray-200 me-2 mb-2">
                     Fermer
                 </button>

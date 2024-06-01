@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
 })
 export class ItemComponent {
 
-  items$ = this.itemService.getBestSellingItems();
+  items$ = this.itemService.getAllItems();
   itemsSubscription: Subscription;
   items: Item[] = [];
   quantityBuy: number = 0;

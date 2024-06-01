@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { apis } from '../environments/api.environment';
+import { initFlowbite } from 'flowbite';
 
 @Component({
   selector: 'app-root',
@@ -12,6 +13,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.loadGoogleMapsApi(this.url);
+    initFlowbite();
   }
 
   loadGoogleMapsApi(url: string) {

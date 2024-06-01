@@ -31,6 +31,10 @@ export class ItemService {
     });
   }
 
+  getAllItems () {
+    return this.itemsToDisplay.asObservable();
+  }
+
   // setItemsToDisplay (items: Item[]) {
     
   // }

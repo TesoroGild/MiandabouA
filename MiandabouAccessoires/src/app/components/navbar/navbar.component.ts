@@ -6,6 +6,9 @@ import { UserService } from '../../services/user/user.service';
 import { CartService } from '../../services/cart/cart.service';
 import { environment } from '../../../environments/dev.environment';
 import { Subscription } from 'rxjs';
+import { Modal } from 'flowbite'
+
+
 
 @Component({
   selector: 'app-navbar',

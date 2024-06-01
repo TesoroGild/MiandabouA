@@ -24,6 +24,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
+import { RegisterClientComponent } from './components/register-client/register-client.component';
 //import { GooglePlaceModule } from "ngx-google-places-autocomplete";
 
 @NgModule({
@@ -43,7 +44,8 @@ import { LazyLoadImageModule } from 'ng-lazyload-image';
     UserComponent,
     PwdrecoveryComponent,
     RegisterComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    RegisterClientComponent
   ],
   imports: [
     BrowserModule,
