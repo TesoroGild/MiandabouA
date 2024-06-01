@@ -2,11 +2,12 @@ import { Component, ElementRef, ViewChild, NgZone  } from '@angular/core';
 import { Router } from '@angular/router';
 import { CartService } from '../../services/cart/cart.service';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../services/connection/auth.service';
 import { CheckoutService } from '../../services/checkout/checkout.service';
+import { UserToDisplay } from '../../interfaces/user.interface';
 
 @Component({
   selector: 'app-checkout',
@@ -105,6 +106,9 @@ export class CheckoutComponent {
   subTotal: number = 0;
   delivery: number = 0;
   userIsLoggedIn: boolean = false;
+  userToDisplay$ = this.authService.getUserToDisplay();
+  userToDisplay: UserToDisplay = {} as UserToDisplay;
+  userSubscription: Subscription;
   //coutriesDropdownOpen = false;
   //selectedCountry: any;
 
@@ -116,7 +120,15 @@ export class CheckoutComponent {
     private authService: AuthService,
     private checkoutService: CheckoutService,
     private snackBar: MatSnackBar
-  ) {}
+  ) {
+    this.userSubscription = this.userToDisplay$.subscribe((u) => {
+      this.userToDisplay = u;
+      this.checkoutForm.get("firstname")?.setValue(this.userToDisplay.firstname);
+      this.checkoutForm.get("lastname")?.setValue(this.userToDisplay.lastname);
+      this.checkoutForm.get("email")?.setValue(this.userToDisplay.email);
+      this.checkoutForm.get("phonenumber")?.setValue(this.userToDisplay.tel);
+    })
+  }
 
   ngOnInit () {
     this.cartService.getCartTotal().subscribe(subTotal => {

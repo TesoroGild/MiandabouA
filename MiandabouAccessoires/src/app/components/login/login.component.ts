@@ -64,7 +64,10 @@ export class LoginComponent {
               panelClass: 'success'
             });
             this.loginForm.reset();
-            this.router.navigate(['']);
+            const currentUrl = this.router.url;
+            //remplacer true
+            if (currentUrl != "/cart") this.router.navigate(['']);
+            else this.router.navigate(['/checkout'])
             console.log("LOGIN: USER CONNECTED");
           } else {
             this.snackBar.open(userConnected.msg, "", {
