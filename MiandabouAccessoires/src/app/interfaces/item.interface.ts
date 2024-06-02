@@ -18,6 +18,13 @@ export interface Item {
     rate: number;
     totalSell: number;
 }
+export interface ItemCaisse {
+    id: string;
+    name: string;
+    price : string;
+    promo: number;
+    rate: number;
+}
 
 export interface ItemCart {
     item: Item;

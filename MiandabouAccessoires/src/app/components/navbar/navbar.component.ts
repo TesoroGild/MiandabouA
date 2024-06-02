@@ -7,6 +7,8 @@ import { CartService } from '../../services/cart/cart.service';
 import { environment } from '../../../environments/dev.environment';
 import { Subscription } from 'rxjs';
 import { Modal } from 'flowbite'
+import { ItemCaisse } from '../../interfaces/item.interface';
+import { Coupon } from '../../interfaces/coupon.interface';
 
 
 
@@ -20,8 +22,15 @@ export class NavbarComponent {
   userToDisplay$ = this.authService.getUserToDisplay();
   userToDisplay: UserToDisplay = {} as UserToDisplay;
   userSubscription: Subscription;
+  items: ItemCaisse[] = [];
   isProfileDropdownOpen = false;
   isLanguagesDropdownOpen = false;
+  subTotal: number = 0;
+  total: number = 0;
+  couponsTotal: number = 0;
+  coupons: Coupon[] = [];
+  registerModal = false;
+  updateModal = false;
 
   constructor(
     private router: Router, 
@@ -38,6 +47,21 @@ export class NavbarComponent {
     this.authService.userToDisplay.subscribe((data) => {
       this.userToDisplay = data;
       console.log(this.userToDisplay);
+    });
+    this.cartService.getItemsCaisseToDisplay().subscribe(items => {
+      this.items = items;
+    });
+    this.cartService.getCaisseSubTotal().subscribe(subTotal => {
+      this.subTotal = subTotal;
+    });
+    this.cartService.getCaisseTotal().subscribe(total => {
+      this.total = total;
+    });
+    this.cartService.getCouponCaisseTotal().subscribe(total => {
+      this.couponsTotal = total;
+    })
+    this.cartService.getCoupons().subscribe(coupons => {
+      this.coupons = coupons;
     });
   }
 
@@ -70,5 +94,29 @@ export class NavbarComponent {
   picture() {
     if (this.userToDisplay.contenthash) return `${environment.backendUrl}/images/userPic/${this.userToDisplay.contenthash}`
     else return "../../../assets/img/user_icon.png";
+  }
+
+  selectedAllCoupons () {
+    this.cartService.setAllCoupons();
+  }
+
+  setCoupon (coupon: Coupon, index: number) {
+    this.cartService.setCoupon(coupon);
+  }
+
+  openRegisterModal () {
+    this.registerModal = true;
+  }
+
+  closeRegisterModal () {
+    this.registerModal = false;
+  }
+
+  openUpdateModal () {
+    this.updateModal = true;
+  }
+
+  closeUpdateModal () {
+    this.updateModal = false;
   }
 }
